@@ -1,0 +1,24 @@
+/* NewspaperEditor.css */
+.exported-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .exported-page h1 {
+    font-size: 2em;
+    margin-bottom: 0px;
+  }
+  
+  .exported-page p {
+    font-size: 1em;
+    margin-bottom: 0px;
+  }
+  
+  .exported-page .content {
+    margin-top: 10px;
+    font-family: 'Helvetica, Arial, sans-serif';
+    font-size: 14px;
+    line-height: 1.2;
+  }
+  

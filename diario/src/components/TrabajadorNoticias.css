@@ -1,0 +1,106 @@
+@import url('https://fonts.googleapis.com/css2?family=Brava+Slab:wght@400;700&display=swap');
+
+body {
+  font-family: 'Brava Slab', serif;
+}
+
+
+.trabajador-page {
+  padding: 20px; /* Espacio interno alrededor del contenedor */
+  max-width: 1200px; /* Ancho máximo para el contenedor */
+  margin: 0 auto; /* Centra el contenedor en la página */
+}
+
+.trabajador-noticias-titulo {
+  font-size: 2em;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.trabajador-info {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.trabajador-profile-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.trabajador-name {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+.trabajador-description {
+  font-size: 1em;
+  color: #555; /* Color de texto más suave */
+  margin-top: 10px;
+}
+
+
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* Tres columnas como en el diseño proporcionado */
+  gap: 20px; /* Espacio entre las tarjetas */
+}
+
+.news-item {
+  border-bottom: 1px solid #eaeaea; /* Línea inferior sutil */
+  padding-bottom: 15px;
+  text-align: left; /* Alineación del contenido a la izquierda */
+  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transición suave */
+}
+
+.news-item:hover {
+  transform: translateY(-5px); /* Mover ligeramente hacia arriba al hacer hover */
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada al hacer hover */
+}
+
+.news-img-container {
+  width: 100%;
+  height: 200px; /* Altura fija para las imágenes */
+  overflow: hidden; /* Ocultar el exceso de imagen */
+  margin-bottom: 10px; /* Espacio entre imagen y contenido */
+}
+
+.news-img {
+  width: 100%; /* Asegura que la imagen ocupe todo el ancho */
+  height: 100%; /* Asegura que la imagen ocupe todo el alto */
+}
+
+.news-content {
+  padding: 0 10px; /* Espacio lateral dentro de cada tarjeta */
+}
+
+.news-title {
+  font-weight: bold;
+  font-size: 1.2em;
+  margin: 0;
+}
+
+.news-description {
+  color: #555; /* Color de texto más suave */
+  font-size: 1em;
+  margin: 5px 0;
+}
+
+.news-date {
+  font-size: 0.9em;
+  color: #999; /* Color gris para la fecha */
+}
+
+/* Estilo adicional para asegurar un buen espacio en la página */
+@media (max-width: 768px) {
+  .news-grid {
+    grid-template-columns: repeat(2, 1fr); /* Dos columnas en pantallas más pequeñas */
+  }
+}
+
+@media (max-width: 480px) {
+  .news-grid {
+    grid-template-columns: 1fr; /* Una columna en pantallas muy pequeñas */
+  }
+}
