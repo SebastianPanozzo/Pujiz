@@ -1,142 +1,83 @@
-/* Footer.css */
 .footer {
-    background-color: #f8f8f8;
-    padding: 40px 0;
-    font-family: Arial, sans-serif;
-  }
-  
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 15px;
-  }
-  
-  .footer-content {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-  }
-  
-  .footer-section {
-    flex: 1;
-    min-width: 200px;
-    margin-bottom: 20px;
-  }
-  
-  .footer-section h3 {
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #333;
-  }
-  
-  .footer-section ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .footer-section ul li {
-    margin-bottom: 8px;
-  }
-  
-  .footer-section ul li a {
-    color: #666;
-    text-decoration: none;
-    font-size: 14px;
-  }
-  
-  .footer-section ul li a:hover {
-    text-decoration: underline;
-  }
-  
-  .social-icons, .app-stores {
-    display: flex;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  
-  .social-icons a {
-    width: 40px;
-    height: 40px;
-    background-color: #333;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    text-decoration: none;
-    font-size: 0;
-    transition: background-color 0.3s;
-  }
-  
-  .social-icons a:hover {
-    background-color: #0077b5; /* Color de hover para LinkedIn */
-  }
-  
-  .social-icons .instagram-icon:hover {
-    background-color: #e4405f; /* Color de hover para Instagram */
-  }
-  
-  .social-icons a img {
-    width: 20px;
-    height: 20px;
-  }
-  
-  /* Para darle un fondo específico si quieres usar íconos en lugar de imágenes */
-  .social-icons a.linkedin-icon {
-    background-color: #0077b5; /* LinkedIn */
-  }
-  
-  .social-icons a.instagram-icon {
-    background-color: #e4405f; /* Instagram */
-  }
-  
-  
-  .app-stores a {
-    width: 120px;
-    height: 40px;
-    border-radius: 5px;
-    background-size: cover;
-  }
-  /**
-  .google-play {
-    background-image: url('path-to-google-play-badge.png');
-  }
-  
-  .app-store {
-    background-image: url('path-to-app-store-badge.png');
-  }*/
-  
-  .footer-info {
-    margin-top: 30px;
-    border-top: 1px solid #ddd;
-    padding-top: 20px;
-    font-size: 12px;
-    color: #666;
-  }
-  
-  .footer-info p {
-    margin-bottom: 5px;
-  }
-  
-  .recaptcha {
-    margin-top: 15px;
-  }
-  
-  .recaptcha a {
-    color: #0066cc;
-    text-decoration: none;
-  }
-  
-  .recaptcha a:hover {
-    text-decoration: underline;
-  }
-  
-  @media (max-width: 768px) {
-    .footer-content {
-      flex-direction: column;
-    }
-    
-    .footer-section {
-      width: 100%;
-    }
-  }
+  background-color: #f8f8f8;
+  padding: 40px 20px;
+  font-family: Arial, sans-serif;
+  color: #333;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 280px;
+}
+
+.footer-section h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #000;
+  font-weight: bold;
+}
+
+.footer-section p,
+.footer-section ul {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.footer-section ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 8px;
+}
+
+.social-icons {
+  display: flex;
+  gap: 15px;
+}
+
+.social-icons a {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #333;
+  border-radius: 50%;
+  transition: background-color 0.3s;
+}
+
+.social-icons a img {
+  width: 20px;
+  height: 20px;
+}
+
+.social-icons a:hover {
+  background-color: #555;
+}
+
+.footer-info {
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+  text-align: center;
+  font-size: 12px;
+  color: #666;
+}
+
+.footer-info p {
+  margin-bottom: 5px;
+}

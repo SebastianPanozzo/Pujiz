@@ -12,7 +12,7 @@ h1, h2, h3, h4 {
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 1150px; /*Si queres achicar para los margenes cambia esto*/
   margin: 0 auto;
   padding: 20px;
   background-color: #fff;
@@ -26,7 +26,6 @@ h1, h2, h3, h4 {
   flex-direction: column;
   gap: 30px;
   flex: 3;
-  margin-left: -55px;
 }
 
 .news-section, .main-article, .secondary-article, .featured-left, .featured-right .carousel-item {
@@ -51,30 +50,26 @@ h1, h2, h3, h4 {
 
 .news-grid {
   display: grid;
-  gap: 10px;
-  grid-template-columns: repeat(2, 1fr); /* Cambia a 2 columnas */
+  gap: 20px;
+  grid-template-columns: 300px 1fr; /* Ancho fijo para artículo principal, resto para secundarios */
   border-top: 1px solid #ddd;
   padding-top: 20px;
-
 }
 
 /* Estilos para el artículo principal */
 .main-article {
-  flex: 1;
+  width: 300px; /* Ancho fijo */
+  height: auto; /* Altura automática */
   position: relative;
   overflow: hidden;
   border-bottom: 1px solid #ddd;
   background-color: #fff;
-  grid-column: 1 / 2;
-  grid-row: 1 / 2;
-  width: 350px;
-  height: 573px;
   cursor: pointer;
 }
 
 .main-article img {
   width: 100%;
-  height: 250px;
+  height: 200px; /* Altura reducida para la imagen */
 }
 
 .main-article-content {
@@ -121,36 +116,36 @@ h1, h2, h3, h4 {
 
 /* Estilos para los artículos secundarios */
 .secondary-articles {
-  display: grid;
+  display: flex;
   flex-direction: column;
-  grid-template-columns: repeat(2, 1fr); /* Mantén 2 columnas para secundarios */
-  gap: 10px;
-  cursor: pointer;
+  gap: 15px;
+  width: 500px;
 }
-
+.secondary-article-content {
+  flex: 1;
+}
 .secondary-article {
   display: flex;
-  gap: 10px;
+  gap: 15px;
   align-items: flex-start;
   border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
+  padding-bottom: 15px;
   background-color: #fff;
   cursor: pointer;
-  height: 184px;
-  width: 300px;
+  height: auto;
+  width: 100%;
 }
 
 .secondary-article img {
-  width: 180px;
-  height: 150px;
+  width: 120px; /* Imagen más pequeña */
+  height: 100px;
 }
 
 .secondary-article h4 {
-  font-size: 13px;
+  font-size: 14px;
+  margin: 0 0 8px 0;
   color: #33689e;
-  margin-top: 10px;
 }
-
 .secondary-article .date {
   font-size: 12px;
   color: #666;
@@ -273,18 +268,21 @@ h1, h2, h3, h4 {
 /* Estilos para la sección de noticias recientes */
 .sections-and-recent-news {
   display: flex;
+  gap: 20px; /* Aumentado el espacio entre las secciones */
 }
 
 .recent-news {
-  flex: 2;
-  margin-right: -55px;
-  
+  flex: 1; /* Reducimos el ratio de las noticias recientes */
+  max-width: 400px; /* Aumentado de 300px */
+  margin-left: -20px;
 }
 
 .recent-news-section {
   background-color: #ffffff;
   padding: 15px;
   border-radius: 20px;
+  width: 100%; /* Asegura que use todo el ancho disponible */
+
 }
 
 .recent-news-section .section-title {
@@ -312,6 +310,8 @@ h1, h2, h3, h4 {
   cursor: pointer;
   transition: background-color 0.3s ease;
   text-align: center; /* Centra el texto */
+  width: 100%; /* Asegura que use todo el ancho disponible */
+
 }
 .recent-news-content h4 {
   margin: 5px 0;
@@ -343,7 +343,8 @@ h1, h2, h3, h4 {
   text-align: left; /* Centra el texto */
 }
 .recent-news-image {
-  width: 500px; /* Ajusta al 100% para que la imagen ocupe todo el ancho del contenedor */
+  width: 100%; /* Cambiado de 400px para ser más responsivo */
+  height: 200px; /* Aumentado de 150px */
   height: 150px; /* Mantiene la relación de aspecto */
   margin-bottom: 10px; /* Espacio entre imagen y texto */
 }
@@ -369,188 +370,168 @@ html, body {
 /* Media query para dispositivos móviles */
 @media screen and (max-width: 768px) {
   /* Contenedor principal */
-  .carousel-caption h3 {
-    font-size: 15px;
-    font-weight: bold;
-    color: #003366;
-  }
   .container {
-    width: 100%; /* Cambio clave: ancho al 100% */
-    max-width: 100%; /* Máximo ancho al 100% */
+    width: 100%;
+    max-width: 100%;
     padding: 10px;
-    margin: 0; /* Elimina márgenes laterales */
+    margin: 0;
   }
 
-  /* Layout principal (debajo de las noticias de portada)*/
+  /* Reorganización del layout principal */
   .sections-and-recent-news {
     flex-direction: column;
     width: 100%;
+    gap: 20px;
   }
 
-  /* Artículo destacado */
-  .featured-article {
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-  }
-
-  .featured-left, 
-  .featured-right {
-    width: 100%; /* Ancho al 100% */
-    max-width: 100%;
-    max-height: none;
-    height: auto;
-  
-  }
-
-  .featured-left .overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 50%;
-    background: linear-gradient(0deg, rgba(0, 0, 0, 0.9), transparent);
-    padding: 10px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    font-size: 9px;
-  }
-  
-  .featured-left img, 
-  .featured-right img {
-    width: 100%;
-    height: 250px;
-    object-fit: cover;
-  }
-  .featured-left h1 {
-    font-family: 'Brava Slab', serif;
-    font-weight: 700;
-    font-size: 15px;
-    color: white;
-  }
-  .featured-right {
-    grid-template-rows: auto auto;
-    grid-template-columns: 1fr;
-  }
-
-  .featured-right .carousel-item {
-    height: 250px;
-  }
-
-  /* Secciones de noticias */
+  /* Hacer que las secciones ocupen todo el ancho */
   .news-sections {
     width: 100%;
-    margin-left: 00px;
+    margin: 0;
   }
 
-  .news-grid {
-    grid-template-columns: 1fr;
-    gap: 15px;
-    width: 100%;
-  }
-
-  .main-article {
-    width: 100%;
-    height: auto;
-  }
-
-  .main-article img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-
-  .secondary-articles {
-    grid-template-columns: 1fr;
-    width: 100%;
-  }
-
-  .secondary-article {
-    width: 100%;
-    height: auto;
+  /* Reset de todos los layouts de noticias para móvil */
+  .news-grid,
+  .main-article,
+  .secondary-articles,
+  .secondary-article,
+  .featured-article,
+  .featured-left,
+  .featured-right,
+  .recent-news-item {
+    display: flex;
     flex-direction: column;
-    align-items: left;
-    text-align: left;
-  }
-
-  .secondary-article img {
     width: 100%;
-    height: 200px;
-    margin-bottom: 10px;
+    gap: 15px;
   }
 
-  /* Noticias recientes */
+  /* Ajustes para las noticias recientes y más leídas */
   .recent-news {
     width: 100%;
-    margin-top: 20px;
+    max-width: 100%;
+    margin: 0;
+    order: 2; /* Mueve la sección al final */
+  }
+
+  .recent-news-section {
+    width: 100%;
+    padding: 0;
+    margin-bottom: 20px;
   }
 
   .recent-news-item {
-    flex-direction: column;
-    align-items: center;
     width: 100%;
+    margin: 0;
+    padding: 0 0 15px 0;
+    border-bottom: 1px solid #ddd;
   }
 
+  /* Estilo unificado para todas las imágenes */
+  .main-article img,
+  .secondary-article img,
+  .featured-left img,
+  .featured-right img,
   .recent-news-image {
     width: 100%;
     height: 200px;
-    margin-bottom: 10px;
   }
 
-  /* Tipografía responsiva */
-  body {
-    font-size: 14px;
+  /* Estilo unificado para el contenido */
+  .main-article-content,
+  .secondary-article-content,
+  .recent-news-content {
+    padding: 10px 0;
+    width: 100%;
   }
 
-  h1 {
-    font-size: 22px;
-  }
-
-  h2, .section-title {
-    font-size: 18px;
-  }
-
-  h3, .main-article h3 {
+  /* Estilo unificado para títulos */
+  .main-article h3,
+  .secondary-article h4,
+  .recent-news-content h4,
+  .featured-left h1,
+  .carousel-caption h3 {
+    font-family: 'Brava Slab', serif;
     font-size: 16px;
+    font-weight: 700;
+    margin: 5px 0;
+    color: #003366;
   }
 
-  h4, .secondary-article h4 {
-    font-size: 14px;
+  .recent-news-content h4 {
+    max-width: 100%; /* Eliminar la restricción de ancho */
+    text-align: left; /* Alinear texto a la izquierda */
   }
 
-  /* Ajustes generales */
-  .description {
+  /* Grid layout unificado */
+  .news-grid {
+    grid-template-columns: 1fr;
+    padding: 10px 0;
+  }
+
+  /* Estilo unificado para metadatos */
+  .author,
+  .date {
     font-size: 12px;
+    color: #666;
+    margin: 2px 0;
   }
 
-  .author, .date {
-    font-size: 10px;
+  /* Estilo unificado para descripciones */
+  .description,
+  .article-preview {
+    font-size: 13px;
+    color: #555;
+    margin-top: 5px;
+    line-height: 1.4;
+  }
+
+  /* Ajustes específicos para la sección destacada */
+  .featured-article {
+    margin-bottom: 20px;
+  }
+
+  .featured-left .overlay {
+    padding: 15px;
+  }
+
+  /* Animaciones unificadas */
+  .main-article:hover,
+  .secondary-article:hover,
+  .featured-right .carousel-item:hover,
+  .featured-left:hover,
+  .recent-news-item:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Ajustes para los títulos de sección */
+  .section-title {
+    width: 100%;
+    margin-bottom: 15px;
+    font-size: 14px;
   }
 }
 
-/* Mejoras adicionales para dispositivos muy pequeños */
+/* Ajustes adicionales para pantallas muy pequeñas */
 @media screen and (max-width: 480px) {
   .container {
-    padding: 5px;
+    padding: 10px;
   }
 
-  .main-article, 
-  .secondary-article {
-    padding: 5px;
+  .main-article img,
+  .secondary-article img,
+  .featured-left img,
+  .featured-right img,
+  .recent-news-image {
+    height: 180px;
   }
 
-  h1 {
-    font-size: 20px;
-  }
-
-  h2, .section-title {
-    font-size: 16px;
-  }
-
-  h3 {
-    font-size: 14px;
+  .main-article h3,
+  .secondary-article h4,
+  .recent-news-content h4,
+  .featured-left h1,
+  .carousel-caption h3 {
+    font-size: 15px;
   }
 }
 /* Animaciones */

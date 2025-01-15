@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useUser } from '../UserContext';
 import FacebookComments from './FacebookComments';
 import './NewsDetail.css';
+import NewsReactions from './NewsReactions';
 
 const NewsDetail = () => {
   const { id } = useParams();
@@ -392,13 +393,27 @@ const NewsDetail = () => {
         dangerouslySetInnerHTML={{ __html: contenido }}
       ></div>
 
-      <h3 className="tags-title">Tags de la noticia</h3>
-      <div className="news-tags">
-        {tags.map((tag, index) => (
-          <Link key={index} to={`/tag/${encodeURIComponent(tag)}`} className="tag-link">
-            <span className="tag">{tag}</span>
-          </Link>
-        ))}
+      <div className="tags-section" style={{ marginBottom: '30px' }}>
+        <h3 className="tags-title">Tags de la noticia</h3>
+        <div className="news-tags">
+          {tags.map((tag, index) => (
+            <Link key={index} to={`/tag/${encodeURIComponent(tag)}`} className="tag-link">
+              <span className="tag">{tag}</span>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      <div className="reactions-section" style={{ 
+        
+        marginBottom: '30px',
+        clear: 'both',
+        width: '100%',
+        maxWidth: '800px',
+        margin: '0 auto'
+      }}>
+        <h3 className="tags-title">Reacciones</h3>
+        <NewsReactions noticiaId={id} />
       </div>
 
       <h3 className="comments-title">Comentarios</h3>

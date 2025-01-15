@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext';
 import './Header.css';
+import logo from '../assets/images/EG 1.jpg';
 
 function Header() {
   const { user, setUser } = useUser();
   const [trabajadorId, setTrabajadorId] = useState(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,6 +16,16 @@ function Header() {
     if (accessToken) {
       fetchUserProfile(accessToken);
     }
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrolled = window.scrollY > 50;
+      setIsScrolled(scrolled);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const fetchUserProfile = async (accessToken) => {
@@ -44,10 +56,20 @@ function Header() {
     { name: 'Portada', path: 'Portada' },
     { name: 'Política', path: 'Política' },
     { name: 'Economía', path: 'Economía' },
-    { name: 'Cultura', path: 'Cultura' },
+    { name: 'Cultura y sociedad', path: 'Cultura y sociedad' },
     { name: 'Mundo', path: 'Mundo' },
-    { name: 'Deportes', path: 'Deportes' },
+    { name: 'Revista Sociedad', path: 'https://diarioelgobierno.pe/revista-sociedad-lifestyle/', external: true },
   ];
+
+  const handleSectionClick = (e, path) => {
+    e.preventDefault();
+    setIsMenuOpen(false);
+    navigate(`/seccion/${encodeURIComponent(path)}`);
+  };
+
+  const handleExternalLink = (e) => {
+    setIsMenuOpen(false);
+  };
 
   const renderAuthLinks = () => (
     user ? (
@@ -56,7 +78,7 @@ function Header() {
           className="button-common"
           onClick={() => {
             handleLogout();
-            setIsMenuOpen(false); // Cerrar el menú móvil
+            setIsMenuOpen(false);
           }}
         >
           Cerrar sesión
@@ -65,7 +87,7 @@ function Header() {
           <Link
             to={`/trabajador/${trabajadorId}`}
             className="button-common"
-            onClick={() => setIsMenuOpen(false)} // Cerrar el menú móvil
+            onClick={() => setIsMenuOpen(false)}
           >
             Perfil
           </Link>
@@ -76,68 +98,109 @@ function Header() {
         <Link
           to="/login"
           className="button-common"
-          onClick={() => setIsMenuOpen(false)} // Cerrar el menú móvil
+          onClick={() => setIsMenuOpen(false)}
         >
           Iniciar sesión
         </Link>
         <Link
           to="/register"
           className="button-common"
-          onClick={() => setIsMenuOpen(false)} // Cerrar el menú móvil
+          onClick={() => setIsMenuOpen(false)}
         >
           Registrarse
         </Link>
       </>
     )
   );
-  
+
   return (
-    <header className="header">
-      <div className="container">
-        <div className="header-content">
-          <Link to="/home" className="logo">
-            DIARIO EL GOBIERNO
-          </Link>
-
-          {/* Botón de menú hamburguesa */}
-          <button className="hamburger-button" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            ☰
-          </button>
-        </div>
-
-        {/* Menú de escritorio */}
-        <nav className="nav-menu">
-          {sections.map((section) => (
-            <Link key={section.path} to={`/seccion/${encodeURIComponent(section.path)}`}>
-              {section.name}
+    <>
+      <div className="header-spacer" />
+      <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
+        <div className="container">
+          <div className="header-content">
+            <Link to="/home" className="logo">
+              <img src={logo} alt="Logo Diario El Gobierno" className="logo-image" />
+              DIARIO EL GOBIERNO
             </Link>
-          ))}
-        </nav>
-
-        {/* Menú móvil */}
-        <nav className={`navv-menu ${isMenuOpen ? 'open' : ''}`}>
-          {/* Secciones */}
-          {sections.map((section) => (
-            <Link
-              key={section.path}
-              to={`/seccion/${encodeURIComponent(section.path)}`}
-              onClick={() => setIsMenuOpen(false)}
-              className="mobile-section-link"
+  
+            {/* Botón hamburguesa simplificado */}
+            <button 
+              className="hamburger-button"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {section.name}
-            </Link>
-          ))}
-
-          {/* Botones de autenticación */}
-          <div className="mobile-auth-links">
+              {isMenuOpen ? '✕' : '☰'}
+            </button>
+          </div>
+  
+          <div className="sections-container">
+            {/* Menú de escritorio */}
+            <nav className="nav-menu">
+              {sections.map((section) => (
+                section.external ? (
+                  <a
+                    key={section.path}
+                    href={section.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {section.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={section.path}
+                    to={`/seccion/${encodeURIComponent(section.path)}`}
+                  >
+                    {section.name}
+                  </Link>
+                )
+              ))}
+            </nav>
+  
+            {/* Overlay para el menú móvil */}
+            <div 
+              className={`mobile-menu-overlay ${isMenuOpen ? 'open' : ''}`}
+              onClick={() => setIsMenuOpen(false)}
+            />
+  
+            {/* Menú móvil */}
+            <nav className={`navv-menu ${isMenuOpen ? 'open' : ''}`}>
+              {sections.map((section) => (
+                section.external ? (
+                  <a
+                    key={section.path}
+                    href={section.path}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => setIsMenuOpen(false)}
+                    className="mobile-section-link"
+                  >
+                    {section.name}
+                  </a>
+                ) : (
+                  <Link
+                    key={section.path}
+                    to={`/seccion/${encodeURIComponent(section.path)}`}
+                    onClick={() => setIsMenuOpen(false)}
+                    className="mobile-section-link"
+                  >
+                    {section.name}
+                  </Link>
+                )
+              ))}
+              
+              <div className="mobile-auth-links">
+                {renderAuthLinks()}
+              </div>
+            </nav>
+          </div>
+  
+          <div className="header-actions">
             {renderAuthLinks()}
           </div>
-        </nav>
-
-        {/* Acciones del encabezado para escritorio */}
-        <div className="header-actions">{renderAuthLinks()}</div>
-      </div>
-    </header>
+        </div>
+      </header>
+    </>
   );
 }
 

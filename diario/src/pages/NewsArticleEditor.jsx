@@ -24,9 +24,8 @@ const NewsManagement = () => {
     'Portada',
     'Política',
     'Economía',
-    'Cultura',
+    'Cultura y sociedad',
     'Mundo',
-    'Deportes',
   ];
 
   useEffect(() => {

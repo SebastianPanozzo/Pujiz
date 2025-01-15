@@ -8,7 +8,7 @@ body {
 .trabajador-page {
   padding: 20px; /* Espacio interno alrededor del contenedor */
   max-width: 1200px; /* Ancho máximo para el contenedor */
-  margin: 0 auto; /* Centra el contenedor en la página */
+  /* margin: 0 auto;  Centra el contenedor en la página lo comentamos para que quede el margen a la derecha*/
 }
 
 .trabajador-noticias-titulo {

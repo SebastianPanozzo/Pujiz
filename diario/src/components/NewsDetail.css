@@ -73,7 +73,14 @@
   /* font-style: italic; */
 }
 
-
+/* Agregar esta nueva regla para ocultar el ícono en el primer elemento */
+.news-section-link:first-child::before {
+  display: none;
+}
+/* También ajustar el padding de la primera seccion que aparezca */
+.news-section-link:first-child {
+  padding-left: 0;
+}
 .news-section-link::before {
   content: "\25C6"; /* Icono decorativo (rombo) */
   position: absolute;

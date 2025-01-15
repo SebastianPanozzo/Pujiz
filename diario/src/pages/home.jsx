@@ -9,44 +9,48 @@ const HomePage = () => {
   const [featuredNews, setFeaturedNews] = useState([]);
   const [sectionNews, setSectionNews] = useState({});
   const [recentNews, setRecentNews] = useState([]);
-
+  const [mostViewedNews, setMostViewedNews] = useState([]); // New state
   const navigate = useNavigate();
 
-  // Función para eliminar etiquetas HTML
+  // Content processing functions
   const stripHtml = (html) => {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     return doc.body.textContent || "";
   };
-    // Función para truncar el título de la noticia
-    const truncateTitle = (title, maxLength) => {
-      return title.length > maxLength ? title.slice(0, maxLength) + '...' : title;
-    };
 
-  // Función para truncar el contenido de la noticia
+  const getFirstParagraphContent = (content) => {
+    const plainText = stripHtml(content);
+    const words = plainText.split(/\s+/);
+    return words.slice(0, 30).join(' ') + (words.length > 30 ? '...' : '');
+  };
+
+  const truncateTitle = (title, maxLength) => {
+    return title.length > maxLength ? title.slice(0, maxLength) + '...' : title;
+  };
+
   const truncateContent = (content, type) => {
-    const plainText = stripHtml(content); // Eliminar etiquetas HTML
+    const plainText = stripHtml(content);
     
     switch (type) {
-        case 'default':
-            return plainText ? (plainText.length > 20 ? plainText.slice(0, 20) + '...' : plainText) : ''; // Truncar a 50 caracteres
-        case 'main':
-            return plainText ? (plainText.length > 150 ? plainText.slice(0, 150) + '...' : plainText) : ''; // Truncar a 100 caracteres
-        case 'secondary':
-            return plainText ? (plainText.length > 10 ? plainText.slice(0, 10) + '...' : plainText) : ''; // Truncar a 75 caracteres
-        case 'recent':
-            return plainText ? (plainText.length > 20 ? plainText.slice(0, 20) + '...' : plainText) : ''; // Truncar a 30 caracteres
-        default:
-            return plainText; // Sin truncado por defecto
+      case 'default':
+        return plainText ? (plainText.length > 20 ? plainText.slice(0, 20) + '...' : plainText) : '';
+      case 'main':
+        return plainText ? (plainText.length > 150 ? plainText.slice(0, 150) + '...' : plainText) : '';
+      case 'secondary':
+        return plainText ? (plainText.length > 10 ? plainText.slice(0, 10) + '...' : plainText) : '';
+      case 'recent':
+        return plainText ? (plainText.length > 20 ? plainText.slice(0, 20) + '...' : plainText) : '';
+      default:
+        return plainText;
     }
-};
-  // Función para truncar subtítulos largos o mostrar parte del contenido si es "default content"
-  const truncateSubtitle = (subtitle, content, type) => {
-    if (subtitle === 'default content') {
-      return truncateContent(content); // Aquí podrías especificar un truncado más específico para el contenido
-    }
-    
   };
-  
+
+  const truncateSubtitle = (subtitle, content) => {
+    if (subtitle === 'default content') {
+      return truncateContent(content);
+    }
+    return subtitle;
+  };
 
   useEffect(() => {
     const fetchFeaturedNews = async () => {
@@ -64,14 +68,13 @@ const HomePage = () => {
     };
 
     const fetchSectionNews = async () => {
-      const sections = ['Economía', 'Política', 'Cultura', 'Mundo'];
+      const sections = ['Economía', 'Política', 'Cultura y sociedad', 'Mundo'];
       try {
         const response = await axios.get('http://127.0.0.1:8000/diarioback/noticias');
         const filteredNews = response.data.filter(newsItem => newsItem.estado === 3);
         await fetchAuthorsAndEditors(filteredNews);
 
         const newSectionNews = {};
-
         sections.forEach(section => {
           const sortedNews = filteredNews
             .filter(newsItem => [newsItem.seccion1, newsItem.seccion2, newsItem.seccion3, newsItem.seccion4, newsItem.seccion5, newsItem.seccion6].includes(section))
@@ -94,9 +97,30 @@ const HomePage = () => {
           .sort((a, b) => new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion));
 
         await fetchAuthorsAndEditors(sortedNews);
-        setRecentNews(sortedNews.slice(0, 9));
+        setRecentNews(sortedNews.slice(0, 5));
       } catch (error) {
         console.error('Failed to fetch recent news:', error);
+      }
+    };
+    const fetchMostViewedNews = async () => {
+      try {
+        const response = await axios.get('http://127.0.0.1:8000/diarioback/noticias/mas_vistas/');
+        // Filtrar solo noticias publicadas y ordenar por contador_visitas
+        const filteredNews = response.data
+          .filter(newsItem => newsItem.estado === 3)
+          .sort((a, b) => b.contador_visitas - a.contador_visitas)
+          .slice(0, 5); // Tomar solo las 5 más vistas
+        
+        await fetchAuthorsAndEditors(filteredNews);
+        setMostViewedNews(filteredNews);
+        
+        // Para debug
+        console.log('Noticias más vistas:', filteredNews.map(news => ({
+          titulo: news.nombre_noticia,
+          visitas: news.contador_visitas
+        })));
+      } catch (error) {
+        console.error('Failed to fetch most viewed news:', error);
       }
     };
 
@@ -124,6 +148,8 @@ const HomePage = () => {
     fetchFeaturedNews();
     fetchSectionNews();
     fetchRecentNews();
+    fetchMostViewedNews(); // Add this new fetch
+
   }, []);
 
   const renderNewsSection = (newsArray, sectionTitle) => (
@@ -134,18 +160,21 @@ const HomePage = () => {
           <div className="main-article" onClick={() => navigate(`/noticia/${newsArray[0].id}`)}>
             <img src={newsArray[0].imagen_cabecera} alt={newsArray[0].nombre_noticia} />
             <div className="main-article-content">
-            <h3>{truncateTitle(newsArray[0].nombre_noticia, 60)}</h3>
+              <h3>{truncateTitle(newsArray[0].nombre_noticia, 60)}</h3>
               {newsArray[0].autorData && (
                 <p className="author">
                   por {newsArray[0].autorData.nombre} {newsArray[0].autorData.apellido}
                 </p>
               )}
               <p className="date">{new Date(newsArray[0].fecha_publicacion).toLocaleDateString()}</p>
+              <p className="article-preview" style={{color: '#555'}}>
+                {getFirstParagraphContent(newsArray[0].contenido)}
+              </p>
             </div>
           </div>
         )}
         <div className="secondary-articles">
-          {newsArray.slice(1, 7).map((newsItem) => (
+          {newsArray.slice(1, 5).map((newsItem) => (
             <div
               key={newsItem.id}
               className="secondary-article"
@@ -155,7 +184,7 @@ const HomePage = () => {
               <div className="secondary-article-content">
                 <h4>{newsItem.nombre_noticia}</h4>
                 {newsItem.autorData && (
-                  <p className="author" style={{ color: '#555' }}>
+                  <p className="author">
                     por {newsItem.autorData.nombre} {newsItem.autorData.apellido}
                   </p>
                 )}
@@ -167,7 +196,6 @@ const HomePage = () => {
       </div>
     </div>
   );
-  
 
   const renderRecentNews = (recentNewsArray) => (
     <div className="recent-news-section">
@@ -189,7 +217,34 @@ const HomePage = () => {
       </div>
     </div>
   );
-//secciones de inicio (la portada)
+
+  const renderMostViewedNews = (mostViewedNewsArray) => (
+    <div className="recent-news-section">
+      <h2 className="section-title">MÁS LEÍDAS</h2>
+      <div className="recent-news-list">
+        {mostViewedNewsArray.length > 0 ? (
+          mostViewedNewsArray.map(newsItem => (
+            <div
+              key={newsItem.id}
+              className="recent-news-item"
+              onClick={() => navigate(`/noticia/${newsItem.id}`)}
+            >
+              <img src={newsItem.imagen_cabecera} alt={newsItem.nombre_noticia} className="recent-news-image" />
+              <div className="recent-news-content">
+                <h4>{newsItem.nombre_noticia}</h4>
+                <div className="news-meta">
+                  <p className="date">{new Date(newsItem.fecha_publicacion).toLocaleDateString()}</p>
+                </div>
+              </div>
+            </div>
+          ))
+        ) : (
+          <p>No hay noticias destacadas</p>
+        )}
+      </div>
+    </div>
+  );
+
   return (
     <div className="container">
       <main>
@@ -200,9 +255,9 @@ const HomePage = () => {
                 <img src={featuredNews[0].imagen_cabecera} alt={featuredNews[0].nombre_noticia} />
                 <div className="overlay">
                   <h1 style={{ color: 'white' }}>{featuredNews[0].nombre_noticia}</h1>
-                  <p  >{new Date(featuredNews[0].fecha_publicacion).toLocaleDateString()}</p>
+                  <p>{new Date(featuredNews[0].fecha_publicacion).toLocaleDateString()}</p>
                   {featuredNews[0].autorData && (
-                    <p className="author" style ={{marginTop: '-5px'}}>
+                    <p className="author" style={{ marginTop: '-5px' }}>
                       por {featuredNews[0].autorData.nombre} {featuredNews[0].autorData.apellido}
                     </p>
                   )}
@@ -210,7 +265,7 @@ const HomePage = () => {
               </div>
 
               <div className="featured-right">
-                {featuredNews.slice(1, 3).map((newsItem) => ( // Mostrar solo dos elementos
+                {featuredNews.slice(1, 3).map((newsItem) => (
                   <div
                     key={newsItem.id}
                     className="carousel-item"
@@ -230,8 +285,6 @@ const HomePage = () => {
                   </div>
                 ))}
               </div>
-
-
             </>
           )}
         </div>
@@ -245,6 +298,7 @@ const HomePage = () => {
 
           <div className="recent-news">
             {renderRecentNews(recentNews)}
+            {renderMostViewedNews(mostViewedNews)} {/* Add this new section */}
           </div>
         </div>
       </main>
@@ -253,4 +307,3 @@ const HomePage = () => {
 };
 
 export default HomePage;
-

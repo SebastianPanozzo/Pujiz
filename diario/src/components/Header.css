@@ -8,9 +8,19 @@ body {
 }
 
 .header {
+  position: fixed;
+  width: 100%;
+  top: 0;
   background-color: white;
   border-bottom: 1px solid #ffffff;
   font-family: 'Roboto', sans-serif;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+
+.header-spacer {
+  height: 140px;
 }
 
 .container {
@@ -23,6 +33,24 @@ body {
   display: flex;
   padding: 15px 0;
   align-items: center;
+  height: 70px;
+}
+
+.sections-container {
+  position: relative;
+  z-index: 10;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  background-color: white;
+}
+
+.header.scrolled {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.header.scrolled .sections-container {
+  height: 0;
+  opacity: 0;
 }
 
 .logo {
@@ -31,8 +59,16 @@ body {
   font-weight: bold;
   color: #0066cc;
   text-decoration: none;
-  flex-grow: 1;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.logo-image {
+  width: 40px;
+  height: auto;
 }
 
 .nav-menu {
@@ -65,14 +101,14 @@ body {
   background-color: #0066cc;
   color: white;
   border: none;
-  padding: 8px 30px;
+  padding: 8px 10px;
   border-radius: 20px;
   font-size: 14px;
   font-family: 'Roboto', sans-serif;
   cursor: pointer;
   text-decoration: none;
   margin-left: 7px;
-  z-index: 10; /* Prioridad frente a elementos superpuestos */
+  z-index: 10;
 }
 
 .button-common:hover {
@@ -109,18 +145,6 @@ body {
   margin: 0;
   padding: 5px 10px;
   text-align: center;
-  background-color: #0066cc;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  font-family: 'Roboto', sans-serif;
-  font-size: 15px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.navv-menu .button-common:hover {
-  background-color: #439af1;
 }
 
 .navv-menu .mobile-section-link {
@@ -139,7 +163,26 @@ body {
 
 /* Mobile Responsive Design */
 @media (max-width: 768px) {
-  .nav-menu, .search-form {
+  .header-spacer {
+    height: 100px;
+  }
+  .mobile-section-link {
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    color: #333;
+    text-decoration: none;
+    border-bottom: 1px solid #e5e5e5;
+    background-color: white;
+  }
+  .mobile-section-link:hover {
+    background-color: #f4f4f4;
+  }
+  .header.scrolled .navv-menu {
+    top: 70px;
+  }
+  .nav-menu, 
+  .search-form {
     display: none;
   }
 
@@ -152,32 +195,63 @@ body {
     width: 100%;
     text-align: center;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: -25px;
+  }
+
+  .logo-image {
+    margin-left: 75px;
+  }
+  .header.scrolled .sections-container {
+    height: auto;
+    opacity: 1;
+  }
+  .header.scrolled .navv-menu.open {
+    display: flex;
+    top: 70px;
   }
 
   .hamburger-button {
     display: block;
+    position: absolute;
+    right: 15px;
+    top: 25px;
+    z-index: 1002;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+    padding: 8px;
   }
-
   .header-actions {
     display: none;
   }
 
   .navv-menu {
+    margin-top: 21px;
     display: none;
     flex-direction: column;
     background-color: #fff;
-    position: absolute;
-    top: 60px;
-    right: 0;
+    position: fixed;
+    top: 150px; /* Ajustado para que aparezca debajo del header */
+    left: 0;
     width: 100%;
-    z-index: 10;
+    height: calc(100vh - 100px);
+    z-index: 1001;
     padding: 10px 0;
     border-top: 1px solid #e5e5e5;
-    align-items: center;
+    overflow-y: auto;
   }
 
   .navv-menu.open {
     display: flex;
+  }
+
+  .header.scrolled .navv-menu {
+    top: 70px;
   }
 }
 
@@ -186,7 +260,23 @@ body {
   .nav-menu {
     display: flex;
   }
+  .header.scrolled .sections-container {
+    height: 0;
+    opacity: 0;
+  }
 
+  .logo {
+    font-family: 'Merriweather', serif;
+    font-size: 24px;
+    font-weight: bold;
+    color: #0066cc;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
   .navv-menu {
     display: none;
   }
@@ -194,44 +284,29 @@ body {
   .header-actions {
     display: flex;
   }
-}
 
-
-.nav-menu {
-  display: flex; /* Asegura que sea visible en escritorio */
-  justify-content: center;
-  gap: 20px;
-  position: relative; /* Permite controlar su posición */
-  z-index: 1; /* Prioridad frente a otros elementos */
-}
-
-/* Menú móvil */
-.navv-menu {
-  display: none; /* Oculto por defecto */
-}
-
-/* Solo visible en móviles */
-@media (max-width: 768px) {
-  .nav-menu {
-    display: none; /* Esconder menú de escritorio */
-  }
-
-  .navv-menu {
-    display: none; /* Oculto inicialmente */
-    flex-direction: column;
-    background-color: #fff;
-    position: absolute;
-    top: 60px;
-    right: 0;
+  .mobile-menu-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
-    z-index: 10; /* Prioridad cuando se muestra */
-    padding: 10px 0;
-    border-top: 1px solid #e5e5e5;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+  
+  .mobile-menu-overlay.open {
+    display: block;
+  }
+
+  .mobile-auth-links {
+    padding: 15px 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
     align-items: center;
+    gap: 10px;
   }
 
-  .navv-menu.open {
-    display: flex; /* Mostrar menú móvil abierto */
-  }
 }
-
