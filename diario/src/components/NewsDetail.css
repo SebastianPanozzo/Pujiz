@@ -46,7 +46,7 @@
   font-weight: bold;
   margin: 10px 0;
   margin-top: 20px;
-  color: #0066b2;
+  color: #156AA2;
   line-height: 1.5;
 }
 
@@ -87,7 +87,7 @@
   left: 0; /* Coloca el icono al principio */
   top: 50%;
   transform: translateY(-50%);
-  color: #0066b2; /* Color del icono */
+  color: #156AA2; /* Color del icono */
   font-size: 10px; /* Ajusta el tamaño del icono */
 }
 
@@ -111,7 +111,7 @@ pre {
 .news-section {
   font-family: 'Old Roman', serif;
   font-size: 11px;
-  color: #0066b2;
+  color: #156AA2;
   font-weight: bold;
   text-transform: uppercase;
 }

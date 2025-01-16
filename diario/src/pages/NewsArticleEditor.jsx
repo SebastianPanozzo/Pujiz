@@ -118,7 +118,7 @@ const NewsManagement = () => {
         ...record,
         fecha_publicacion: moment(record.fecha_publicacion),
         solo_para_subscriptores: record.solo_para_subscriptores || false,
-        tags: record.tags || '',
+        Palabras_clave: record.Palabras_clave || '',
         secciones: secciones,
         estado: record.estado ? parseInt(record.estado, 10) : undefined,
       });
@@ -165,7 +165,7 @@ const NewsManagement = () => {
       seccion4: secciones[3] || '',
       seccion5: secciones[4] || '',
       seccion6: secciones[5] || '',
-      tags: values.tags || '',
+      Palabras_clave: values.Palabras_clave || '',
       autor: parseInt(values.autor, 10),
       editor_en_jefe: parseInt(values.editor_en_jefe, 10),
       estado: parseInt(values.estado, 10),
@@ -294,7 +294,7 @@ const NewsManagement = () => {
         return status ? status.nombre_estado : 'Unknown';
       }
     },
-    { title: 'Tags', dataIndex: 'tags', key: 'tags' },
+    { title: 'Palabras_clave', dataIndex: 'Palabras_clave', key: 'Palabras_clave' },
     {
       title: 'Actions',
       key: 'actions',
@@ -396,7 +396,7 @@ const NewsManagement = () => {
             </Select>
           </Form.Item>
 
-          <Form.Item name="tags" label="Tags">
+          <Form.Item name="Palabras_clave" label="Palabras clave">
             <TextArea rows={4} />
           </Form.Item>
         </Form>

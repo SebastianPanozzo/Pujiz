@@ -6,19 +6,19 @@ body {
 
 .tag-page {
   padding: 20px; /* Espacio interno alrededor del contenedor */
-  max-width: 1200px; /* Ancho máximo para el contenedor */
+  max-width: 1000px; /* Ancho máximo para el contenedor */
   /* margin: 0 auto;  Centra el contenedor en la página lo comentamos para que quede el margen a la derecha*/
 }
 
 .news-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* Tres columnas como en el diseño proporcionado */
-  gap: 20px; /* Espacio entre las tarjetas */
+  gap: 15px; /* Espacio entre las tarjetas */
 }
 
 .news-item {
   border-bottom: 1px solid #eaeaea; /* Línea inferior sutil */
-  padding-bottom: 15px;
+  padding-bottom: 12px;
   text-align: left; /* Alineación del contenido a la izquierda */
   transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transición suave */
 }
@@ -30,9 +30,9 @@ body {
 
 .news-img-container {
   width: 100%;
-  height: 200px; /* Altura fija para las imágenes */
+  height: 160px; /* Altura fija para las imágenes */
   overflow: hidden; /* Ocultar el exceso de imagen */
-  margin-bottom: 10px; /* Espacio entre imagen y contenido */
+  margin-bottom: 8px; /* Espacio entre imagen y contenido */
 }
 
 .news-img {
@@ -46,23 +46,23 @@ body {
 
 .news-title {
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1.1em;
   margin: 0;
 }
 
 .news-description {
   color: #555; /* Color de texto más suave */
-  font-size: 1em;
-  margin: 5px 0;
+  font-size: 0.9em; /* Reduced from 1em */
+  margin: 4px 0; /* Reduced from 5px */
 }
 
 .news-date {
-  font-size: 0.9em;
+  font-size: 0.8em; /* Reduced from 0.9em *
   color: #999; /* Color gris para la fecha */
 }
 
 .news-author {
-  font-size: 0.9em;
+  font-size: 0.8em; /* Reduced from 0.9em *
   color: #007bff; /* Color azul para el autor */
   font-weight: bold;
 }
@@ -87,11 +87,11 @@ body {
 }
 
 .page-button {
-  border: 1px solid #007bff;
+  border: 1px solid #156AA2;
   background-color: white;
-  color: #007bff;
-  padding: 8px 12px;
-  margin: 0 5px;
+  color: #156AA2;
+  padding: 6px 10px; /* Reduced from 8px 12px */
+  margin: 0 4px; /* Reduced from 0 5px */
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -102,6 +102,6 @@ body {
 }
 
 .page-button.active {
-  background-color: #007bff;
+  background-color: #156AA2;
   color: white;
 }

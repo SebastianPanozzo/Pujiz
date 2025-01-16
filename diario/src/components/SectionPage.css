@@ -5,78 +5,77 @@ body {
 }
 
 .section-page {
-  padding: 20px; /* Espacio interno alrededor del contenedor */
-  max-width: 1200px; /* Ancho máximo para el contenedor */
-  /* margin: 0 auto; /* Centra el contenedor en la página lo comentamos para que quede el margen a la derecha */
+  padding: 20px;
+  max-width: 1000px; /* Reduced from 1200px */
 }
 
 .news-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Tres columnas como en el diseño proporcionado */
-  gap: 20px; /* Espacio entre las tarjetas */
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px; /* Reduced from 20px */
 }
 
 .news-item {
-  border-bottom: 1px solid #eaeaea; /* Línea inferior sutil */
-  padding-bottom: 15px;
-  text-align: left; /* Alineación del contenido a la izquierda */
-  transition: transform 0.2s ease, box-shadow 0.2s ease; /* Transición suave */
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 12px; /* Reduced from 15px */
+  text-align: left;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .news-item:hover {
-  transform: translateY(-5px); /* Mover ligeramente hacia arriba al hacer hover */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Sombra más pronunciada al hacer hover */
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
 .news-img-container {
   width: 100%;
-  height: 200px; /* Altura fija para las imágenes */
-  overflow: hidden; /* Ocultar el exceso de imagen */
-  margin-bottom: 10px; /* Espacio entre imagen y contenido */
+  height: 160px; /* Reduced from 200px */
+  overflow: hidden;
+  margin-bottom: 8px; /* Reduced from 10px */
 }
 
 .news-img {
-  width: 100%; /* Asegura que la imagen ocupe todo el ancho */
-  height: 100%; /* Asegura que la imagen ocupe todo el alto */
+  width: 100%;
+  height: 100%;
 }
 
 .news-content {
-  padding: 0 10px; /* Espacio lateral dentro de cada tarjeta */
+  padding: 0 8px; /* Reduced from 10px */
 }
 
 .news-title {
   font-weight: bold;
-  font-size: 1.2em;
+  font-size: 1.1em; /* Reduced from 1.2em */
   margin: 0;
 }
 
 .news-description {
-  color: #555; /* Color de texto más suave */
-  font-size: 1em;
-  margin: 5px 0;
+  color: #555;
+  font-size: 0.9em; /* Reduced from 1em */
+  margin: 4px 0; /* Reduced from 5px */
 }
 
 .news-date {
-  font-size: 0.9em;
-  color: #999; /* Color gris para la fecha */
+  font-size: 0.8em; /* Reduced from 0.9em */
+  color: #999;
 }
 
 .news-author {
-  font-size: 0.9em;
-  color: #007bff; /* Color azul para el autor */
+  font-size: 0.8em; /* Reduced from 0.9em */
+  color: #156AA2;
   font-weight: bold;
 }
 
-/* Estilo adicional para asegurar un buen espacio en la página */
+/* Responsive styles */
 @media (max-width: 768px) {
   .news-grid {
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas en pantallas más pequeñas */
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
   .news-grid {
-    grid-template-columns: 1fr; /* Una columna en pantallas muy pequeñas */
+    grid-template-columns: 1fr;
   }
 }
 
@@ -87,11 +86,11 @@ body {
 }
 
 .page-button {
-  border: 1px solid #007bff;
+  border: 1px solid #156AA2;
   background-color: white;
-  color: #007bff;
-  padding: 8px 12px;
-  margin: 0 5px;
+  color: #156AA2;
+  padding: 6px 10px; /* Reduced from 8px 12px */
+  margin: 0 4px; /* Reduced from 0 5px */
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
@@ -102,6 +101,6 @@ body {
 }
 
 .page-button.active {
-  background-color: #007bff;
+  background-color: #156AA2;
   color: white;
 }

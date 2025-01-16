@@ -20,8 +20,8 @@ const TagPage = () => {
         const filteredNews = response.data
           .filter(newsItem =>
             newsItem.estado === 3 &&
-            newsItem.tags &&
-            newsItem.tags.split(',').map(tag => tag.trim().toLowerCase()).includes(tagName.toLowerCase())
+            newsItem.Palabras_clave &&
+            newsItem.Palabras_clave.split(',').map(tag => tag.trim().toLowerCase()).includes(tagName.toLowerCase())
           )
           .sort((a, b) => new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion));
 

@@ -199,174 +199,206 @@ export const EditNewsContent = () => {
         </Select>
       </Form.Item>
       <Editor
-  apiKey="n4p00cmzpfhi984ei5sgacg93brnu89dco7io30mvon29srl"
-  value={content}
-  init={{
-    height: 500,
-    menubar: false,
-    images_upload_handler: handleImageUpload,
-    automatic_uploads: false,
-    images_upload_credentials: true,
-    convert_urls: false,
-    plugins: [
-      'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'print', 'preview', 'anchor',
-      'searchreplace', 'visualblocks', 'code', 'fullscreen',
-      'insertdatetime', 'media', 'table', 'paste', 'code', 'help', 'wordcount',
-      'image'
-    ],
-    toolbar:
-      'undo redo | styleselect | bold italic underline | blocks | forecolor backcolor | ' +
-      'alignleft aligncenter alignright alignjustify | outdent indent | ' +
-      'bullist numlist | link image media table | charmap | ' +
-      'hr | blockquote | removeformat | help | fullscreen ',
-    
-    content_style: `
-      body {
-        font-family: Arial, sans-serif;
-        margin-left: 200px;
-        margin-right: 200px;
-      }
-      .news-detail-container {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-      }
-      h1 {
-        font-family: 'Pentay Bold';
-        font-size: 18pt;
-        font-weight: bold;
-      }
-      h2 {
-        font-family: 'Pentay Bold';
-        font-size: 17pt;
-        font-weight: bold;
-        font-style: italic;
-      }
-      h6 {
-        font-family: 'MVB Dovetail Light Italic';
-        font-size: 13.5pt;
-        color: black;
-        background-color: #f0f0f0;
-        text-indent: 0.2in;
-      }
-      p {
-        font-family: 'Linotype Devanagari';
-        font-size: 13pt;
-        margin: 0;
-      }
-      pre {
-        font-family: 'Times New Roman';
-        font-size: 9pt;
-        color: gray;
-        text-align: center;
-        margin-top: 0px;
-        margin-bottom: 20px;
+        apiKey="n4p00cmzpfhi984ei5sgacg93brnu89dco7io30mvon29srl"
+        value={content}
+        init={{
+          height: 500,
+          menubar: false,
+          images_upload_handler: handleImageUpload,
+          automatic_uploads: false,
+          images_upload_credentials: true,
+          convert_urls: false,
+          block_formats: 'Paragraph=p; Heading 1=h1; Heading 2=h2; Heading 6=h6; Preformatted=pre',
+          plugins: [
+            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'print', 'preview', 'anchor',
+            'searchreplace', 'visualblocks', 'code', 'fullscreen',
+            'insertdatetime', 'media', 'table', 'paste', 'code', 'help', 'wordcount',
+            'image'
+          ],
+          toolbar:
+            'undo redo | styleselect | formatselect | bold italic underline | blocks | forecolor backcolor | ' +
+            'alignleft aligncenter alignright alignjustify | outdent indent | ' +
+            'bullist numlist | link image media table | charmap | ' +
+            'hr | blockquote | removeformat | help | fullscreen ',
+          
+          content_style: `
+            body {
+              font-family: Arial, sans-serif;
+              margin-left: 200px;
+              margin-right: 200px;
+            }
+            .news-detail-container {
+              max-width: 800px;
+              margin: 0 auto;
+              padding: 20px;
+            }
+            h1 {
+              font-family: 'Pentay Bold';
+              font-size: 18pt;
+              font-weight: bold;
+            }
+            h2 {
+              font-family: 'Pentay Bold';
+              font-size: 17pt;
+              font-weight: bold;
+              font-style: italic;
+            }
+            h6 {
+              font-family: 'MVB Dovetail Light Italic';
+              font-size: 13.5pt;
+              color: black;
+              background-color: #f0f0f0;
+              text-indent: 0.2in;
+            }
+            p {
+              font-family: 'Linotype Devanagari';
+              font-size: 13pt;
+              margin: 0;
+            }
+            pre {
+              font-family: 'Times New Roman';
+              font-size: 9pt;
+              color: gray;
+              text-align: center;
+              margin-top: 0px;
+              margin-bottom: 20px;
+            }
+            blockquote {
+              font-family: 'MVB Dovetail Light Italic';
+              font-size: 13.5pt;
+              color: black;
+              background-color: #f0f0f0;
+            }
+            img {
+              width: 100%;
+              height: 400px;
+              margin-bottom: 0px;
+              object-fit: cover;
+            }
+          `,
+          font_formats:
+            "Arial=arial,helvetica,sans-serif;" +
+            "Georgia=georgia,palatino;" +
+            "Helvetica=helvetica;" +
+            "Times New Roman=times new roman,times;" +
+            "Verdana=verdana,geneva;" +
+            "Pentay Bold=pentay bold,sans-serif;" +
+            "Linotype Devanagari=Linotype Devanagari;" +
+            "MVB Dovetail Light Italic=MVB Dovetail Light Italic;",
+          fontsize_formats: "8pt 10pt 12pt 14pt 17pt 18pt 24pt 36pt",
+          style_formats: [
+            {
+              title: 'Heading 1',
+              format: 'h1',
+            },
+            {
+              title: 'Heading 2',
+              format: 'h2',
+            },
+            {
+              title: 'Heading 6',
+              format: 'h6',
+            },
+            {
+              title: 'Paragraph',
+              format: 'p',
+            },
+            {
+              title: 'Preformatted',
+              format: 'pre',
+            }
+          ],
+          setup: function (editor) {
+            editor.on('keydown', function (e) {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                
+                // Limpiar formato existente
+                editor.execCommand('RemoveFormat');
+                editor.execCommand('mceRemoveFormat', false, 'strong');
+                editor.execCommand('mceRemoveFormat', false, 'em');
+                editor.execCommand('mceRemoveFormat', false, 'u');
+                
+                // Insertar el nuevo párrafo con un espacio no rompible
+                editor.insertContent('<p style="margin: 0; padding: 0;">\u200B</p>');
+                editor.execCommand('FormatBlock', false, 'p');
+                
+                // Obtener y configurar el nuevo nodo
+                const newNode = editor.selection.getNode();
+                if (newNode) {
+                  // Estilos base
+                  newNode.style.fontFamily = 'Linotype Devanagari';
+                  newNode.style.fontSize = '13pt';
+                  newNode.style.margin = '0';
+                  newNode.style.padding = '0';
+                  newNode.style.lineHeight = '1';
+                  
+                  // Limpiar estilos adicionales
+                  newNode.style.fontWeight = 'normal';
+                  newNode.style.fontStyle = 'normal';
+                  newNode.style.textDecoration = 'none';
+                  newNode.style.backgroundColor = '';
+                  newNode.style.color = '';
+                  
+                  // Asegurar que el cursor esté al inicio del nuevo párrafo
+                  const rng = editor.selection.getRng();
+                  rng.setStart(newNode, 0);
+                  rng.setEnd(newNode, 0);
+                  editor.selection.setRng(rng);
+                }
+                
+                // Mantener el foco en el editor
+                editor.focus();
+                
+                // Asegurar que el párrafo permanezca vacío pero visible
+                if (newNode && !newNode.innerHTML.trim()) {
+                  newNode.innerHTML = '\u200B';
+                }
+              }
+            });
+            editor.on('BeforeSetContent', function (e) {
+              if (e.format === 'html') {
+                e.content = e.content.replace(/<h1>/g, '<h1 style="font-family: Pentay Bold; font-size: 18pt; font-weight: bold;">');
+                e.content = e.content.replace(/<h2>/g, '<h2 style="font-family: Pentay Bold; font-size: 17pt; font-weight: bold; font-style: italic;">');
+                e.content = e.content.replace(/<h6>/g, '<h6 style="font-family: MVB Dovetail Light Italic; font-size: 13.5pt; color: black; background-color: #f0f0f0; text-indent: 0.2in;">');
+                e.content = e.content.replace(/<blockquote>/g, '<blockquote style="font-family: MVB Dovetail Light Italic; font-size: 13.5pt; color: black; background-color: #f0f0f0;">');
+                e.content = e.content.replace(/<pre>/g, '<pre style="font-family: Times New Roman; font-size: 9pt; color: gray;">');
+              }
+            });
 
-      }
-      blockquote {
-        font-family: 'MVB Dovetail Light Italic';
-        font-size: 13.5pt;
-        color: black;
-        background-color: #f0f0f0;
-      }
-      img {
-        width: 100%;
-        height: 400px;
-        margin-bottom: 0px;
-        object-fit: cover;
-      }
-    `,
-    font_formats:
-      "Arial=arial,helvetica,sans-serif;" +
-      "Georgia=georgia,palatino;" +
-      "Helvetica=helvetica;" +
-      "Times New Roman=times new roman,times;" +
-      "Verdana=verdana,geneva;" +
-      "Pentay Bold=pentay bold,sans-serif;" +
-      "Linotype Devanagari=Linotype Devanagari;" +
-      "MVB Dovetail Light Italic=MVB Dovetail Light Italic;",
-    fontsize_formats: "8pt 10pt 12pt 14pt 17pt 18pt 24pt 36pt",
-    style_formats: [
-      {
-        title: 'Heading 1',
-        format: 'h1',
-      },
-      {
-        title: 'Heading 2',
-        format: 'h2',
-      },
-      {
-        title: 'Heading 6',
-        format: 'h6',
-      },
-      {
-        title: 'Paragraph',
-        format: 'p',
-      },
-      {
-        title: 'Preformatted',
-        format: 'pre',
-      }
-    ],
-    setup: function (editor) {
-      editor.on('keydown', function (e) {
-        if (e.key === 'Enter') {
-          e.preventDefault(); // Evitar el comportamiento predeterminado
-          editor.execCommand('RemoveFormat'); // Limpiar el formato actual
-          editor.insertContent('<p></p>\u200B'); // Inserta un nuevo párrafo con un carácter invisible
-          editor.focus(); // Asegúrate de que el editor esté enfocado
-          // Cambiar a formato de párrafo
-          editor.execCommand('FormatBlock', false, 'p'); // Asegúrate de que esté en formato de párrafo
-        }
-      });
-    
-    
-
-      editor.on('BeforeSetContent', function (e) {
-        if (e.format === 'html') {
-          e.content = e.content.replace(/<h1>/g, '<h1 style="font-family: Pentay Bold; font-size: 18pt; font-weight: bold;">');
-          e.content = e.content.replace(/<h2>/g, '<h2 style="font-family: Pentay Bold; font-size: 17pt; font-weight: bold; font-style: italic;">');
-          e.content = e.content.replace(/<h6>/g, '<h6 style="font-family: MVB Dovetail Light Italic; font-size: 13.5pt; color: black; background-color: #f0f0f0; text-indent: 0.2in;">');
-          e.content = e.content.replace(/<blockquote>/g, '<blockquote style="font-family: MVB Dovetail Light Italic; font-size: 13.5pt; color: black; background-color: #f0f0f0;">');
-          e.content = e.content.replace(/<pre>/g, '<pre style="font-family: Times New Roman; font-size: 9pt; color: gray;">');
-        }
-      });
-
-      editor.on('NodeChange', function (e) {
-        const { nodeName } = e.element;
-        if (nodeName === 'H1') {
-          e.element.style.fontFamily = 'Pentay Bold';
-          e.element.style.fontSize = '18pt';
-          e.element.style.fontWeight = 'bold';
-        } else if (nodeName === 'H2') {
-          e.element.style.fontFamily = 'Pentay Bold';
-          e.element.style.fontSize = '17pt';
-          e.element.style.fontWeight = 'bold';
-          e.element.style.fontStyle = 'italic';
-        } else if (nodeName === 'H6') {
-          e.element.style.fontFamily = 'MVB Dovetail Light Italic';
-          e.element.style.fontSize = '13.5pt';
-          e.element.style.color = 'black';
-          e.element.style.backgroundColor = '#f0f0f0';
-          e.element.style.textIndent = '0.2in';
-        } else if (nodeName === 'P') {
-          e.element.style.fontFamily = 'Linotype Devanagari';
-          e.element.style.fontSize = '13pt';
-          e.element.style.margin = '0';
-        } else if (nodeName === 'PRE') {
-          e.element.style.fontFamily = 'Times New Roman';
-          e.element.style.fontSize = '9pt';
-          e.element.style.color = 'gray';
-        }
-      });
+            editor.on('NodeChange', function (e) {
+              const { nodeName } = e.element;
+              if (nodeName === 'H1') {
+                e.element.style.fontFamily = 'Pentay Bold';
+                e.element.style.fontSize = '18pt';
+                e.element.style.fontWeight = 'bold';
+              } else if (nodeName === 'H2') {
+                e.element.style.fontFamily = 'Pentay Bold';
+                e.element.style.fontSize = '17pt';
+                e.element.style.fontWeight = 'bold';
+                e.element.style.fontStyle = 'italic';
+              } else if (nodeName === 'H6') {
+                e.element.style.fontFamily = 'MVB Dovetail Light Italic';
+                e.element.style.fontSize = '13.5pt';
+                e.element.style.color = 'black';
+                e.element.style.backgroundColor = '#f0f0f0';
+                e.element.style.textIndent = '0.2in';
+              } else if (nodeName === 'P') {
+                e.element.style.fontFamily = 'Linotype Devanagari';
+                e.element.style.fontSize = '13pt';
+                e.element.style.margin = '0';
+              } else if (nodeName === 'PRE') {
+                e.element.style.fontFamily = 'Times New Roman';
+                e.element.style.fontSize = '9pt';
+                e.element.style.color = 'gray';
+              }
+            });
 
       // Agregar un evento para eliminar negrita al cambiar a párrafo o preformateado
       editor.on('FormatChanged', function (e) {
         const selectedNode = editor.selection.getNode();
         if (selectedNode) {
           const tagName = selectedNode.nodeName;
-
-          // Si el formato es P o PRE, quitar la negrita
           if (tagName === 'P' || tagName === 'PRE') {
             editor.execCommand('RemoveFormat');
             editor.execCommand('mceRemoveFormat', false, 'strong');

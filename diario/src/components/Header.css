@@ -57,7 +57,7 @@ body {
   font-family: 'Merriweather', serif;
   font-size: 24px;
   font-weight: bold;
-  color: #0066cc;
+  color: #156AA2;
   text-decoration: none;
   display: flex;
   justify-content: center;
@@ -86,7 +86,7 @@ body {
 }
 
 .nav-menu a:hover {
-  color: #0066cc;
+  color: #156AA2;
 }
 
 .header-actions {
@@ -98,7 +98,7 @@ body {
 }
 
 .button-common {
-  background-color: #0066cc;
+  background-color: #156AA2;
   color: white;
   border: none;
   padding: 8px 10px;
@@ -269,7 +269,7 @@ body {
     font-family: 'Merriweather', serif;
     font-size: 24px;
     font-weight: bold;
-    color: #0066cc;
+    color: #156AA2;
     text-decoration: none;
     display: flex;
     justify-content: center;

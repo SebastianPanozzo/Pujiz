@@ -11,7 +11,7 @@ const NewsDetail = () => {
   const [newsData, setNewsData] = useState(null);
   const [authorData, setAuthorData] = useState(null);
   const [editorData, setEditorData] = useState(null);
-  const [tags, setTags] = useState([]);
+  const [Palabras_clave, setPalabras_clave] = useState([]);
   const { user } = useUser();
   const [speechState, setSpeechState] = useState('stopped'); // 'stopped', 'speaking', 'paused'
   const [speechProgress, setSpeechProgress] = useState(0);
@@ -23,7 +23,7 @@ const NewsDetail = () => {
   const speechStartTimeRef = useRef(null);
 
   // Utility function to strip HTML tags
-  const stripHtmlTags = (html) => {
+  const stripHtmlPalabras_clave = (html) => {
     const tmp = document.createElement('DIV');
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || '';
@@ -31,7 +31,7 @@ const NewsDetail = () => {
 
   const readContentAloud = () => {
     if (newsData && newsData.contenido) {
-      const plainText = stripHtmlTags(newsData.contenido);
+      const plainText = stripHtmlPalabras_clave(newsData.contenido);
       const truncatedText = plainText.substring(0, 3000);
   
       if (speechState === 'speaking') {
@@ -183,8 +183,8 @@ const NewsDetail = () => {
         setNewsData(news);
 
         // Parse tags
-        if (news.tags) {
-          setTags(news.tags.split(',').map(tag => tag.trim()));
+        if (news.Palabras_clave) {
+          setPalabras_clave(news.Palabras_clave.split(',').map(tag => tag.trim()));
         }
 
         if (news.autor) {
@@ -394,9 +394,9 @@ const NewsDetail = () => {
       ></div>
 
       <div className="tags-section" style={{ marginBottom: '30px' }}>
-        <h3 className="tags-title">Tags de la noticia</h3>
+        <h3 className="tags-title">Palabras clave </h3>
         <div className="news-tags">
-          {tags.map((tag, index) => (
+          {Palabras_clave.map((tag, index) => (
             <Link key={index} to={`/tag/${encodeURIComponent(tag)}`} className="tag-link">
               <span className="tag">{tag}</span>
             </Link>

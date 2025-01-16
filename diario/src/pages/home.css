@@ -8,7 +8,7 @@ body {
 
 h1, h2, h3, h4 {
   font-family: 'Merriweather', serif;
-  color: #003366;
+  color: #156AA2;
 }
 
 .container {
@@ -42,7 +42,7 @@ h1, h2, h3, h4 {
   margin-bottom: 20px;
   padding: 5px 15px;
   background-color: #fff;
-  border-left: 5px solid #003366;
+  border-left: 5px solid #156AA2;
   border-bottom: 1px solid #ddd;
   cursor: pointer;
   
@@ -83,7 +83,7 @@ h1, h2, h3, h4 {
 .carousel-caption h3 {
   font-size: 20px;
   font-weight: bold;
-  color: #003366;
+  color: #156AA2;
 }
 .main-article-content h3 {
   max-width: 300px; /* Ajusta el ancho según tus necesidades */
@@ -144,7 +144,7 @@ h1, h2, h3, h4 {
 .secondary-article h4 {
   font-size: 14px;
   margin: 0 0 8px 0;
-  color: #33689e;
+  color: #156AA2;
 }
 .secondary-article .date {
   font-size: 12px;
@@ -290,7 +290,7 @@ h1, h2, h3, h4 {
   font-weight: 700;
   font-size: 11px;
   color: white;
-  background-color: #003366;
+  background-color: #156AA2;
   padding: 10px 15px;
 }
 
@@ -334,7 +334,7 @@ h1, h2, h3, h4 {
 }
 .recent-news-content .date {
   font-size: 12px;
-  color: #0582ff;
+  color: #156AA2;
   margin-bottom: 5px;
 }
 .recent-news-content .recent-news-subtitle {
@@ -454,7 +454,7 @@ html, body {
     font-size: 16px;
     font-weight: 700;
     margin: 5px 0;
-    color: #003366;
+    color: #156AA2;
   }
 
   .recent-news-content h4 {
