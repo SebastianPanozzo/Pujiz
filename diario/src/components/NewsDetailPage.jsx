@@ -13,7 +13,7 @@ const NewsDetail = () => {
   const [editorData, setEditorData] = useState(null);
   const [Palabras_clave, setPalabras_clave] = useState([]);
   const { user } = useUser();
-  const [speechState, setSpeechState] = useState('stopped'); // 'stopped', 'speaking', 'paused'
+  const [speechState, setSpeechState] = useState('stopped');
   const [speechProgress, setSpeechProgress] = useState(0);
   const speechUtteranceRef = useRef(null);
   const speechInterval = useRef(null);
@@ -182,7 +182,6 @@ const NewsDetail = () => {
         const news = response.data;
         setNewsData(news);
 
-        // Parse tags
         if (news.Palabras_clave) {
           setPalabras_clave(news.Palabras_clave.split(',').map(tag => tag.trim()));
         }
@@ -203,7 +202,6 @@ const NewsDetail = () => {
 
     fetchNewsData();
 
-    // Cleanup function to cancel speech on component unmount
     return () => {
       window.speechSynthesis.cancel();
       clearInterval(speechInterval.current);
@@ -227,27 +225,38 @@ const NewsDetail = () => {
     return <div>Loading...</div>;
   }
 
-  const { nombre_noticia, subtitulo, seccion1, seccion2, seccion3, seccion4, seccion5, seccion6, fecha_publicacion, imagen_cabecera, contenido } = newsData;
+  const { nombre_noticia, subtitulo, categorias, fecha_publicacion, imagen_cabecera, contenido } = newsData;
 
-  // Recolectar todas las secciones en un array
-  const sections = [seccion1, seccion2, seccion3, seccion4, seccion5, seccion6].filter(section => section);
+  // Convertir las categorías de string a array si es necesario
+  const subcategories = Array.isArray(categorias) ? categorias : (categorias || '').split(',').filter(Boolean);
 
   return (
     <div className="news-detail-container">
       <div className="news-header">
-        <div className="news-meta">
-          {sections.map((section, index) => (
-            <Link key={index} to={`/seccion/${encodeURIComponent(section.toLowerCase())}`} className="news-section-link">
-              <span className="news-section">{section}</span>
+        {/* Categories section first */}
+        <div className="categories-container" style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
+          {subcategories.map((category, index) => (
+            <Link 
+              key={index} 
+              to={`/seccion/${encodeURIComponent(category.toLowerCase())}`} 
+              className="news-section-link"
+              style={{ color: '#0066cc', textDecoration: 'none' }}
+            >
+              <span className="news-section" style={{ fontSize: '14px' }}>{category}</span>
             </Link>
           ))}
+        </div>
+
+        {/* Title and subtitle in their own container */}
+        <div className="title-container">
+          
           <h1
             className="news-title"
             style={{
               fontFamily: "'Adelle Semibold Cnd'",
               fontSize: '28px',
               fontWeight: 'bold',
-              marginTop: '20px',
+              marginTop: '10px',
               color: '#000000',
             }}
           >
@@ -262,6 +271,7 @@ const NewsDetail = () => {
                 fontSize: '18px',
                 fontWeight: 'bold',
                 color: '#425f75',
+                marginTop: '10px'
               }}
             >
               {subtitulo}
@@ -273,7 +283,7 @@ const NewsDetail = () => {
               {new Date(fecha_publicacion).toLocaleDateString('es-ES', { 
                 year: 'numeric', 
                 month: 'long', 
-                day: 'numeric' 
+                day: 'numeric'  
               })}
             </span>
           </div>

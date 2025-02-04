@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Form, Button, Modal, message, Select, Checkbox, Input, DatePicker, Popconfirm } from 'antd';
+import { Table, Form, Button, Modal, Select, Checkbox, Input, DatePicker, Popconfirm } from 'antd';
 import { EditOutlined, PlusOutlined, DeleteOutlined, CommentOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
-import './NewsManagement.css'; // Import the CSS file
+import './NewsManagement.css';
 const { Option } = Select;
 const { TextArea } = Input;
 
@@ -20,12 +20,45 @@ const NewsManagement = () => {
   const [trabajadorId, setTrabajadorId] = useState(null);
   const navigate = useNavigate();
   
-  const sectionOptions = [
-    'Portada',
-    'Política',
-    'Economía',
-    'Cultura y sociedad',
-    'Mundo',
+  const CATEGORIAS = [
+    ['Portada', 'portada'],
+    ['Politica', [
+      ['legislativos', 'Legislativos'],
+      ['judiciales', 'Judiciales'],
+      ['conurbano', 'Conurbano'],
+      ['provincias', 'Provincias'],
+      ['municipios', 'Municipios'],
+      ['protestas', 'Protestas']
+    ]],
+    ['Cultura', [
+      ['cine', 'Cine'],
+      ['literatura', 'Literatura'],
+      ['moda', 'Moda'],
+      ['tecnologia', 'Tecnologia'],
+      ['eventos', 'Eventos']
+    ]],
+    ['Economia', [
+      ['finanzas', 'Finanzas'],
+      ['negocios', 'Negocios'],
+      ['empresas', 'Empresas'],
+      ['dolar', 'Dolar']
+    ]],
+    ['Mundo', [
+      ['argentina', 'Argentina'],
+      ['china', 'China'],
+      ['estados_unidos', 'Estados Unidos'],
+      ['brasil', 'Brasil'],
+      ['america', 'America'],
+      ['latinoamerica', 'Latinoamerica'],
+      ['asia', 'Asia'],
+      ['africa', 'Africa'],
+      ['oceania', 'Oceania'],
+      ['antartica', 'Antartica'],
+      ['internacional', 'Internacional'],
+      ['seguridad', 'Seguridad'],
+      ['comercio', 'Comercio'],
+      ['guerra', 'Guerra']
+    ]]
   ];
 
   useEffect(() => {
@@ -41,221 +74,145 @@ const NewsManagement = () => {
     };
 
     window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, [trabajadorId]);
 
-  const fetchNews = async () => {
-    try {
-      const response = await axios.get('http://127.0.0.1:8000/diarioback/noticias/');
-      const filteredNews = response.data
-        .filter(noticia => 
-          noticia.autor === trabajadorId || noticia.editor_en_jefe === trabajadorId
-        )
-        .sort((a, b) => moment(b.fecha_publicacion).diff(moment(a.fecha_publicacion))); // Ordena por fecha
-  
-      setNews(filteredNews);
-    } catch (error) {
-      console.error('Failed to fetch news:', error);
-      message.error('Failed to fetch news');
-    }
-  };
-  
-
-  const fetchEditors = async () => {
-    try {
-      const response = await axios.get('http://127.0.0.1:8000/diarioback/trabajadores/');
-      setEditors(response.data);
-    } catch (error) {
-      console.error('Failed to fetch editors:', error);
-      message.error('Failed to fetch editors');
-    }
+  const fetchNews = () => {
+    axios.get('http://127.0.0.1:8000/diarioback/noticias/')
+      .then(response => {
+        const filteredNews = response.data
+          .filter(noticia => 
+            noticia.autor === trabajadorId || noticia.editor_en_jefe === trabajadorId
+          )
+          .sort((a, b) => moment(b.fecha_publicacion).diff(moment(a.fecha_publicacion)));
+        setNews(filteredNews);
+      });
   };
 
-  const fetchPublicationStates = async () => {
-    try {
-      const response = await axios.get('http://127.0.0.1:8000/diarioback/estados-publicacion/');
-      setPublicationStates(response.data);
-    } catch (error) {
-      console.error('Failed to fetch publication states:', error);
-      message.error('Failed to fetch publication states');
-    }
+  const fetchEditors = () => {
+    axios.get('http://127.0.0.1:8000/diarioback/trabajadores/')
+      .then(response => setEditors(response.data));
   };
 
-  const verifyTrabajador = async () => {
+  const fetchPublicationStates = () => {
+    axios.get('http://127.0.0.1:8000/diarioback/estados-publicacion/')
+      .then(response => setPublicationStates(response.data));
+  };
+
+  const verifyTrabajador = () => {
     const accessToken = localStorage.getItem('access');
-
     if (!accessToken) {
       navigate('/home');
       return;
     }
 
-    try {
-      const response = await axios.get('http://127.0.0.1:8000/diarioback/user-profile/', {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      });
-
+    axios.get('http://127.0.0.1:8000/diarioback/user-profile/', {
+      headers: { 'Authorization': `Bearer ${accessToken}` },
+    }).then(response => {
       if (!response.data.trabajador) {
         navigate('/home');
         return;
       }
-
       setTrabajadorId(response.data.id);
-    } catch (error) {
-      console.error('Error verifying trabajador:', error);
-      navigate('/home');
-    }
+    }).catch(() => navigate('/home'));
   };
 
   const showModal = (record = null) => {
     if (record) {
-      const secciones = [record.seccion1, record.seccion2, record.seccion3, record.seccion4, record.seccion5, record.seccion6].filter(Boolean);
       form.setFieldsValue({
         ...record,
         fecha_publicacion: moment(record.fecha_publicacion),
         solo_para_subscriptores: record.solo_para_subscriptores || false,
         Palabras_clave: record.Palabras_clave || '',
-        secciones: secciones,
+        categorias: record.categorias || [],
         estado: record.estado ? parseInt(record.estado, 10) : undefined,
       });
       setEditingId(record.id);
 
-      // Filter states based on user role for this specific news item
       if (trabajadorId === record.autor) {
-        // If current user is the author, exclude "publicado" state
         setFilteredPublicationStates(publicationStates.filter(state => state.nombre_estado !== 'publicado'));
       } else if (trabajadorId === record.editor_en_jefe) {
-        // If current user is the editor-in-chief, show all states including "publicado"
         setFilteredPublicationStates(publicationStates);
       } else {
-        // If current user is neither author nor editor-in-chief, show no states
         setFilteredPublicationStates([]);
       }
     } else {
-      // For creating a new news item
       form.resetFields();
       setEditingId(null);
-      // When creating a new item, assume current user is the author, so exclude "publicado"
       setFilteredPublicationStates(publicationStates.filter(state => state.nombre_estado !== 'publicado'));
     }
     setIsModalVisible(true);
   };
-  const handleOk = async () => {
-    // Siempre cierra el modal después de la validación del formulario
-    const values = await form.validateFields().catch((info) => {
-      console.log('Form validation failed:', info);
-      return null; // Devuelve null si la validación falla
-    });
-  
-    if (!values) {
-      return; // Si la validación falla, simplemente sale de la función
-    }
-  
-    const secciones = values.secciones || [];
-    const noticiaEditada = {
-      nombre_noticia: values.nombre_noticia,
-      fecha_publicacion: values.fecha_publicacion.format('YYYY-MM-DD'),
-      seccion1: secciones[0] || '',
-      seccion2: secciones[1] || '',
-      seccion3: secciones[2] || '',
-      seccion4: secciones[3] || '',
-      seccion5: secciones[4] || '',
-      seccion6: secciones[5] || '',
-      Palabras_clave: values.Palabras_clave || '',
-      autor: parseInt(values.autor, 10),
-      editor_en_jefe: parseInt(values.editor_en_jefe, 10),
-      estado: parseInt(values.estado, 10),
-      solo_para_subscriptores: values.solo_para_subscriptores || false,
-      contenido: values.contenido,
-    };
-  
-    console.log('Valores del formulario:', values);
-    console.log('noticiaEditada:', noticiaEditada);
-  
-    if (!noticiaEditada.autor) {
-      message.error('El campo Autor no puede estar vacío o inválido');
-      setIsModalVisible(false); // Cierra el modal incluso si hay un error
-      await fetchNews(); // Recarga las noticias
-      return;
-    }
-  
-    try {
-      let response;
-      if (editingId) {
-        response = await axios.put(`http://127.0.0.1:8000/diarioback/noticias/${editingId}/`, noticiaEditada);
-        console.log('Respuesta del servidor después de actualizar:', response.data);
-  
-        setNews(prevNews => prevNews.map(item => {
-          if (item.id === editingId) {
-            return {
-              ...item,
-              ...response.data,
-              autor: response.data.autor,
-              editor_en_jefe: response.data.editor_en_jefe,
-              secciones: [
-                response.data.seccion1,
-                response.data.seccion2,
-                response.data.seccion3,
-                response.data.seccion4,
-                response.data.seccion5,
-                response.data.seccion6
-              ].filter(Boolean),
-              fecha_publicacion: moment(response.data.fecha_publicacion),
-              estado: parseInt(response.data.estado, 10),
-            };
-          }
-          return item;
-        }));
-      } else {
-        response = await axios.post('http://127.0.0.1:8000/diarioback/noticias/', noticiaEditada);
-        setNews(prevNews => [...prevNews, response.data]);
-      }
-  
-      message.success(editingId ? 'Noticia actualizada exitosamente' : 'Noticia creada exitosamente');
-    } catch (error) {
-      console.error('Error al crear/actualizar noticia:', error);
 
-    } finally {
-      setIsModalVisible(false); // Cierra el modal al final de la función
-      await fetchNews(); // Recarga las noticias al finalizar
-    }
+  const handleOk = () => {
+    form.validateFields().then(values => {
+      if (!Array.isArray(values.categorias)) {
+        values.categorias = values.categorias ? [values.categorias] : [];
+      }
+      
+      const noticiaEditada = {
+        nombre_noticia: values.nombre_noticia,
+        fecha_publicacion: values.fecha_publicacion.format('YYYY-MM-DD'),
+        categorias: values.categorias.join(','),
+        Palabras_clave: values.Palabras_clave || '',
+        autor: parseInt(values.autor, 10),
+        editor_en_jefe: parseInt(values.editor_en_jefe, 10),
+        estado: parseInt(values.estado, 10),
+        solo_para_subscriptores: values.solo_para_subscriptores || false,
+        subtitulo: values.subtitulo || 'default content',
+        imagen_cabecera: values.imagen_cabecera || '',
+        imagen_1: values.imagen_1 || '',
+        imagen_2: values.imagen_2 || '',
+        imagen_3: values.imagen_3 || '',
+        imagen_4: values.imagen_4 || '',
+        imagen_5: values.imagen_5 || '',
+        imagen_6: values.imagen_6 || ''
+      };
+  
+      const submitData = () => {
+        const url = editingId 
+          ? `http://127.0.0.1:8000/diarioback/noticias/${editingId}/`
+          : 'http://127.0.0.1:8000/diarioback/noticias/';
+        
+        const method = editingId ? 'put' : 'post';
+  
+        axios[method](url, noticiaEditada)
+          .finally(() => {
+            setIsModalVisible(false);
+            setTimeout(() => {
+              window.location = window.location;
+            }, 100);
+          });
+      };
+  
+      submitData();
+    });
   };
-  
-  
-  
-  
-  const handleDelete = async (id) => {
-    try {
-      await axios.delete(`http://127.0.0.1:8000/diarioback/noticias/${id}/`);
-      message.success('Noticia eliminada exitosamente');
-      setNews(prevNews => prevNews.filter(item => item.id !== id));
-    } catch (error) {
-      console.error('Failed to delete news:', error);
-      message.error('Error al eliminar la noticia');
-    }
+  const handleDelete = (id) => {
+    axios.delete(`http://127.0.0.1:8000/diarioback/noticias/${id}/`)
+      .then(() => window.location.reload());
   };
 
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
+    console.log('Search term:', e.target.value);
   };
 
   const handleEditContent = (id) => {
     navigate(`/edit-content/${id}`);
+    console.log('Navigating to edit content for news ID:', id);
   };
 
   const handleComment = (id) => {
     navigate(`/comments/${id}`);
+    console.log('Navigating to comments for news ID:', id);
   };
 
   const filteredNews = news.filter(record => 
     record.nombre_noticia.toLowerCase().includes(searchTerm.toLowerCase())
   );
   
-
+  console.log('Filtered News:', filteredNews);
 
   const columns = [
     { title: 'Titulo', dataIndex: 'nombre_noticia', key: 'nombre_noticia' },
@@ -278,11 +235,10 @@ const NewsManagement = () => {
     
     { title: 'Fecha de publicacion', dataIndex: 'fecha_publicacion', key: 'fecha_publicacion' },
     { 
-      title: 'Sections', 
-      key: 'secciones',
+      title: 'Categories', 
+      key: 'categorias',
       render: (text, record) => {
-        const secciones = [record.seccion1, record.seccion2, record.seccion3, record.seccion4, record.seccion5, record.seccion6].filter(Boolean);
-        return secciones.join(', ');
+        return record.categorias ? record.categorias.join(', ') : '';
       }
     },
     { title: 'Subscribers Only', dataIndex: 'solo_para_subscriptores', key: 'solo_para_subscriptores', render: (text) => text ? 'Yes' : 'No' },
@@ -316,21 +272,56 @@ const NewsManagement = () => {
     },
   ];
 
+  const renderCategoryOptions = () => {
+    return CATEGORIAS.map(([value, labelOrSubcats]) => {
+      if (Array.isArray(labelOrSubcats)) {
+        // This is a category with subcategories
+        const [categoryLabel, subcategories] = [value, labelOrSubcats];
+        return (
+          <Select.OptGroup label={categoryLabel} key={categoryLabel}>
+            {subcategories.map(([subValue, subLabel]) => (
+              <Option key={subValue} value={subValue}>{subLabel}</Option>
+            ))}
+          </Select.OptGroup>
+        );
+      } else {
+        // This is a standalone category
+        return <Option key={value} value={value}>{labelOrSubcats}</Option>;
+      }
+    });
+  };
+
   return (
     <div>
-      <Input 
-        placeholder="Buscar por nombre de noticia..." 
-        value={searchTerm} 
-        onChange={handleSearch} 
-        style={{ marginBottom: 16 }} 
-      />
-      <Button icon={<PlusOutlined />} onClick={() => showModal()} style={{ marginBottom: 16 }}>
-        Add News
-      </Button>
+      {/* Barra de búsqueda */}
+      <div className="search-bar">
+        <Input 
+          placeholder="Buscar por nombre de noticia..." 
+          value={searchTerm} 
+          onChange={handleSearch} 
+          style={{ marginBottom: 16, width: '300px' }} 
+        />
+      </div>
+
+      {/* Botón para crear una nueva noticia */}
+      <div className="add-news-button">
+        <Button 
+          type="primary" 
+          icon={<PlusOutlined />} 
+          onClick={() => showModal()} 
+          style={{ marginBottom: 16 }}
+        >
+          Add News
+        </Button>
+      </div>
+
+      {/* Tabla de noticias */}
       <Table columns={columns} dataSource={filteredNews} rowKey="id" />
+
+      {/* Modal para crear/editar noticias */}
       <Modal
         title={editingId ? "Edit News" : "Add News"}
-        open={isModalVisible} // Cambia aquí de visible a open
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={() => setIsModalVisible(false)}
       >
@@ -371,16 +362,17 @@ const NewsManagement = () => {
             <DatePicker />
           </Form.Item>
 
-          <Form.Item name="secciones" label="Sections">
+          <Form.Item 
+            name="categorias" 
+            label="Categories"
+            rules={[{ required: true, message: 'Please select at least one category!' }]}
+          >
             <Select
               mode="multiple"
+              placeholder="Select categories"
               style={{ width: '100%' }}
-              placeholder="Select sections"
-              maxTagCount={6}
             >
-              {sectionOptions.map(section => (
-                <Option key={section} value={section}>{section}</Option>
-              ))}
+              {renderCategoryOptions()}
             </Select>
           </Form.Item>
 

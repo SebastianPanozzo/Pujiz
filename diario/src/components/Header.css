@@ -1,312 +1,215 @@
-/* Importamos las tipografías desde Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Roboto:wght@400;500&display=swap');
-
-body {
-  font-family: 'Roboto', sans-serif;
-  background-color: #fff;
-  color: #333;
-}
-
+/* Estilos generales del header */
 .header {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   position: fixed;
-  width: 100%;
   top: 0;
-  background-color: white;
-  border-bottom: 1px solid #ffffff;
-  font-family: 'Roboto', sans-serif;
-  transition: all 0.3s ease;
-  z-index: 100;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  transition: background-color 0.3s ease;
 }
 
-
-.header-spacer {
-  height: 140px;
+.header.scrolled {
+  background-color: rgba(255, 255, 255, 0.95);
 }
 
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 0 15px;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .header-content {
   display: flex;
-  padding: 15px 0;
   align-items: center;
-  height: 70px;
-}
-
-.sections-container {
-  position: relative;
-  z-index: 10;
-  transition: all 0.3s ease;
-  overflow: hidden;
-  background-color: white;
-}
-
-.header.scrolled {
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
-
-.header.scrolled .sections-container {
-  height: 0;
-  opacity: 0;
-}
-
-.logo {
-  font-family: 'Merriweather', serif;
-  font-size: 24px;
-  font-weight: bold;
-  color: #156AA2;
-  text-decoration: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+  justify-content: center; /* Centrar el logo y el texto */
   width: 100%;
+  position: relative; /* Para posicionar los botones de autenticación */
+}
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #156AA2;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0 auto; /* Centrar el logo y el texto */
 }
 
 .logo-image {
-  width: 40px;
-  height: auto;
+  height: 40px;
+  margin-right: 10px;
 }
 
-.nav-menu {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  margin-top: 10px;
-}
-
-.nav-menu a {
-  color: #333;
-  text-decoration: none;
-  font-size: 16px;
-  font-family: 'Roboto', sans-serif;
-}
-
-.nav-menu a:hover {
-  color: #156AA2;
-}
-
-.header-actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 10px;
-  margin-top: -30px;
-}
-
-.button-common {
-  background-color: #156AA2;
-  color: white;
-  border: none;
-  padding: 8px 10px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-family: 'Roboto', sans-serif;
-  cursor: pointer;
-  text-decoration: none;
-  margin-left: 7px;
-  z-index: 10;
-}
-
-.button-common:hover {
-  background-color: #439af1;
-}
-
+/* Botón hamburguesa */
 .hamburger-button {
   display: none;
   background: none;
   border: none;
-  font-size: 24px;
+  font-size: 1.5rem;
   cursor: pointer;
+}
+
+/* Menú de navegación */
+.nav-menu {
+  display: flex;
+  gap: 20px;
+  align-items: center; /* Alinear verticalmente con los botones */
+
+}
+
+.nav-menu a,
+.nav-menu .section-with-subcategorias > a {
+  text-decoration: none;
   color: #333;
+  font-weight: 500;
+  padding: 10px 0;
+  position: relative;
+}
+
+.nav-menu a:hover,
+.nav-menu .section-with-subcategorias > a:hover {
+  color: #156AA2;
+}
+
+/* Subcategorías */
+.section-with-subcategorias {
+  position: relative;
+}
+
+.subcategorias {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  min-width: 200px;
+}
+
+.section-with-subcategorias:hover .subcategorias {
+  display: block;
+}
+
+.subcategorias a {
+  display: block;
+  padding: 10px;
+  color: #333;
+  text-decoration: none;
+}
+
+.subcategorias a:hover {
+  background-color: #f8f9fa;
 }
 
 /* Menú móvil */
+.mobile-menu-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+}
+
+.mobile-menu-overlay.open {
+  display: block;
+}
+
 .navv-menu {
   display: none;
-}
-
-/* Mobile Authentication Links Styling */
-.navv-menu .mobile-auth-links {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  padding: 5px 0;
-  gap: 10px;
-}
-
-.navv-menu .button-common {
+  position: fixed;
+  top: 0;
+  right: -100%;
   width: 80%;
   max-width: 300px;
-  margin: 0;
-  padding: 5px 10px;
-  text-align: center;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: -2px 0 4px rgba(0, 0, 0, 0.1);
+  transition: right 0.3s ease;
+  z-index: 1000;
+  padding: 20px;
+  overflow-y: auto;
 }
 
-.navv-menu .mobile-section-link {
-  width: 100%;
-  text-align: center;
-  padding: 8px 0;
-  color: #333;
+.navv-menu.open {
+  right: 0;
+}
+
+.mobile-section-link {
+  display: block;
+  padding: 10px 0;
   text-decoration: none;
-  border-bottom: 1px solid #ffffff;
-  transition: background-color 0.3s ease;
+  color: #333;
 }
 
-.navv-menu .mobile-section-link:hover {
-  background-color: #f4f4f4;
+.mobile-section-with-subcategorias {
+  margin-bottom: 10px;
 }
 
-/* Mobile Responsive Design */
+.mobile-subcategorias {
+  margin-left: 20px;
+}
+
+.mobile-subcategoria-link {
+  display: block;
+  padding: 5px 0;
+  text-decoration: none;
+  color: #666;
+}
+
+.mobile-auth-links {
+  margin-top: 20px;
+}
+
+/* Header actions */
+.header-actions {
+  display: flex;
+  gap: 10px;
+  position: absolute; /* Posicionar los botones a la derecha */
+  right: 20px; /* Ajustar la distancia desde el borde derecho */
+  top: 50%; /* Centrar verticalmente */
+  transform: translateY(-50%); /* Ajustar para centrar exactamente */
+}
+
+.button-common {
+  padding: 8px 16px;
+  background-color: #156AA2;
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.button-common:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-  .header-spacer {
-    height: 100px;
-  }
-  .mobile-section-link {
-    width: 100%;
-    text-align: center;
-    padding: 15px 0;
-    color: #333;
-    text-decoration: none;
-    border-bottom: 1px solid #e5e5e5;
-    background-color: white;
-  }
-  .mobile-section-link:hover {
-    background-color: #f4f4f4;
-  }
-  .header.scrolled .navv-menu {
-    top: 70px;
-  }
-  .nav-menu, 
-  .search-form {
-    display: none;
-  }
-
-  .header-content {
-    flex-wrap: wrap;
-  }
-
-  .logo {
-    order: 1;
-    width: 100%;
-    text-align: center;
-    margin-bottom: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-left: -25px;
-  }
-
-  .logo-image {
-    margin-left: 75px;
-  }
-  .header.scrolled .sections-container {
-    height: auto;
-    opacity: 1;
-  }
-  .header.scrolled .navv-menu.open {
-    display: flex;
-    top: 70px;
-  }
-
   .hamburger-button {
     display: block;
-    position: absolute;
-    right: 15px;
-    top: 25px;
-    z-index: 1002;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #333;
-    padding: 8px;
-  }
-  .header-actions {
-    display: none;
   }
 
-  .navv-menu {
-    margin-top: 21px;
-    display: none;
-    flex-direction: column;
-    background-color: #fff;
-    position: fixed;
-    top: 150px; /* Ajustado para que aparezca debajo del header */
-    left: 0;
-    width: 100%;
-    height: calc(100vh - 100px);
-    z-index: 1001;
-    padding: 10px 0;
-    border-top: 1px solid #e5e5e5;
-    overflow-y: auto;
-  }
-
-  .navv-menu.open {
-    display: flex;
-  }
-
-  .header.scrolled .navv-menu {
-    top: 70px;
-  }
-}
-
-/* Desktop Styles */
-@media (min-width: 769px) {
   .nav-menu {
-    display: flex;
-  }
-  .header.scrolled .sections-container {
-    height: 0;
-    opacity: 0;
-  }
-
-  .logo {
-    font-family: 'Merriweather', serif;
-    font-size: 24px;
-    font-weight: bold;
-    color: #156AA2;
-    text-decoration: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-  }
-  .navv-menu {
     display: none;
   }
 
   .header-actions {
-    display: flex;
+    display: none;
   }
 
-  .mobile-menu-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1000;
-  }
-  
-  .mobile-menu-overlay.open {
+  .navv-menu {
     display: block;
   }
-
-  .mobile-auth-links {
-    padding: 15px 0;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-
 }

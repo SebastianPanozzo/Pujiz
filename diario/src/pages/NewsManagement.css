@@ -1,27 +1,66 @@
 /* NewsManagement.css */
-.ant-table {
-  width: 100%;
-  overflow-x: auto;
-}
-
-.ant-table-wrapper {
+/* Base container styles */
+.news-management-container {
+  padding: 16px;
   max-width: 100%;
-  overflow-x: scroll;
-}
-
-.ant-modal {
-  max-width: 95%;
   margin: 0 auto;
 }
 
-.ant-modal-content {
-  width: 100%;
-  max-height: 80vh;
-  overflow-y: auto;
+/* Header section with search and add button */
+.header-section {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
 }
 
-.ant-form-vertical .ant-form-item {
-  margin-bottom: 12px;
+.search-bar {
+  flex: 1;
+  min-width: 250px;
+  margin-top: 16px;
+}
+
+.add-news-button {
+  margin-bottom: 0;
+}
+
+/* Table styles */
+.ant-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 16px;
+}
+
+.ant-table {
+  min-width: 800px;
+}
+
+.ant-table-cell {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Modal styles */
+.ant-modal {
+  width: 90% !important;
+  max-width: 800px;
+  margin: 16px auto;
+}
+
+.ant-modal-content {
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: 8px;
+}
+
+.ant-modal-body {
+  padding: 20px;
+}
+
+/* Form elements */
+.ant-form-item {
+  margin-bottom: 16px;
 }
 
 .ant-select,
@@ -33,71 +72,120 @@
   width: 100%;
 }
 
-.ant-btn {
-  width: 100%;
-  margin-bottom: 10px;
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
-/* Responsive Table Adjustments */
-@media (max-width: 768px) {
-  .ant-table-thead {
-    display: none;
+.action-buttons .ant-btn {
+  margin: 0;
+  flex: 1;
+  min-width: 100px;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .header-section {
+    flex-direction: column;
+  }
+  
+  .search-bar,
+  .add-news-button {
+    width: 100%;
   }
 
+  .ant-table {
+    min-width: unset;
+  }
+
+  /* Convert table to cards on mobile */
   .ant-table-tbody > tr {
-    display: block;
-    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
     border: 1px solid #f0f0f0;
-    padding: 10px;
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 4px;
   }
 
   .ant-table-tbody > tr > td {
-    display: block;
-    text-align: right;
-    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border: none;
+    text-align: left;
   }
 
   .ant-table-tbody > tr > td::before {
     content: attr(data-label);
-    float: left;
-    font-weight: bold;
-    text-transform: uppercase;
+    font-weight: 500;
+    margin-right: 12px;
+    min-width: 120px;
   }
 
   .ant-table-tbody > tr > td:last-child {
-    border-bottom: none;
+    border-top: 1px solid #f0f0f0;
+    margin-top: 8px;
+    padding-top: 16px;
   }
 
-  .ant-table-tbody > tr > td.ant-table-cell-actions {
-    display: flex;
+  .action-buttons {
+    width: 100%;
     flex-direction: column;
-    align-items: stretch;
   }
 
-  .ant-table-tbody > tr > td.ant-table-cell-actions .ant-btn {
-    margin: 5px 0;
+  .action-buttons .ant-btn {
+    width: 100%;
+    margin: 4px 0;
   }
 }
 
-/* Search Input and Add Button Responsive */
-.ant-input-search,
-.ant-btn-add-news {
-  width: 100%;
-  margin-bottom: 15px;
+/* Small screen adjustments */
+@media screen and (max-width: 480px) {
+  .ant-modal {
+    width: 95% !important;
+  }
+
+  .ant-modal-body {
+    padding: 16px;
+  }
+
+  .ant-form-item-label {
+    padding: 0 0 4px;
+  }
 }
 
-/* Modal Responsiveness */
-.ant-modal-body {
-  padding: 15px;
+/* Ensure buttons and inputs have sufficient touch targets */
+@media (hover: none) and (pointer: coarse) {
+  .ant-btn,
+  .ant-input {
+    min-height: 44px;
+  }
+  
+  .ant-select-selector {
+    min-height: 44px !important;
+    display: flex;
+    align-items: center;
+  }
 }
 
-.ant-form-item-label {
-  text-align: left;
-  margin-bottom: 5px;
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .ant-table-tbody > tr {
+    background: #ffffff;
+    border-color: #333;
+  }
+  
+  .ant-table-tbody > tr > td {
+    border-color: #333;
+  }
+}
+.search-bar {
+  margin-top: 130px;
 }
 
-/* Action Buttons in Modal */
-.ant-modal-footer .ant-btn {
-  flex: 1;
-  margin: 0 5px;
+.add-news-button {
 }

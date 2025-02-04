@@ -11,6 +11,74 @@ function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
 
+  // Definir las categorías y subcategorías
+  const categorias = [
+    {
+      nombre: 'Portada',
+      path: 'Portada',
+      subcategorias: [],
+    },
+    {
+      nombre: 'Politica',
+      path: 'Politica',
+      subcategorias: [
+        { nombre: 'Legislativos', path: 'legislativos' },
+        { nombre: 'Judiciales', path: 'judiciales' },
+        { nombre: 'Conurbano', path: 'conurbano' },
+        { nombre: 'Provincias', path: 'provincias' },
+        { nombre: 'Municipios', path: 'municipios' },
+        { nombre: 'Protestas', path: 'protestas' },
+      ],
+    },
+    {
+      nombre: 'Economia',
+      path: 'Economia',
+      subcategorias: [
+        { nombre: 'Finanzas', path: 'finanzas' },
+        { nombre: 'Negocios', path: 'negocios' },
+        { nombre: 'Empresas', path: 'empresas' },
+        { nombre: 'Dolar', path: 'dolar' },
+      ],
+    },
+    {
+      nombre: 'Cultura',
+      path: 'Cultura',
+      subcategorias: [
+        { nombre: 'Cine', path: 'cine' },
+        { nombre: 'Literatura', path: 'literatura' },
+        { nombre: 'Moda', path: 'moda' },
+        { nombre: 'Tecnologia', path: 'tecnologia' },
+        { nombre: 'Eventos', path: 'eventos' },
+      ],
+    },
+    {
+      nombre: 'Mundo',
+      path: 'Mundo',
+      subcategorias: [
+        { nombre: 'Argentina', path: 'argentina' },
+        { nombre: 'China', path: 'china' },
+        { nombre: 'Estados Unidos', path: 'estados-unidos' },
+        { nombre: 'Brasil', path: 'brasil' },
+        { nombre: 'America', path: 'america' },
+        { nombre: 'Latinoamerica', path: 'latinoamerica' },
+        { nombre: 'Asia', path: 'asia' },
+        { nombre: 'Africa', path: 'africa' },
+        { nombre: 'Oceanía', path: 'oceania' },
+        { nombre: 'Antartida', path: 'antartica' },
+        { nombre: 'Internacional', path: 'internacional' },
+        { nombre: 'Seguridad', path: 'seguridad' },
+        { nombre: 'Comercio', path: 'comercio' },
+        { nombre: 'Guerra', path: 'guerra' },
+      ],
+    },
+    {
+      nombre: 'Revista Sociedad',
+      path: 'https://diarioelgobierno.pe/revista-sociedad-lifestyle/',
+      external: true,
+      subcategorias: [],
+    },
+  ];
+
   useEffect(() => {
     const accessToken = localStorage.getItem('access');
     if (accessToken) {
@@ -50,25 +118,6 @@ function Header() {
     setUser(null);
     setTrabajadorId(null);
     navigate('/login');
-  };
-
-  const sections = [
-    { name: 'Portada', path: 'Portada' },
-    { name: 'Política', path: 'Política' },
-    { name: 'Economía', path: 'Economía' },
-    { name: 'Cultura y sociedad', path: 'Cultura y sociedad' },
-    { name: 'Mundo', path: 'Mundo' },
-    { name: 'Revista Sociedad', path: 'https://diarioelgobierno.pe/revista-sociedad-lifestyle/', external: true },
-  ];
-
-  const handleSectionClick = (e, path) => {
-    e.preventDefault();
-    setIsMenuOpen(false);
-    navigate(`/seccion/${encodeURIComponent(path)}`);
-  };
-
-  const handleExternalLink = (e) => {
-    setIsMenuOpen(false);
   };
 
   const renderAuthLinks = () => (
@@ -123,8 +172,7 @@ function Header() {
               <img src={logo} alt="Logo Diario El Gobierno" className="logo-image" />
               DIARIO EL GOBIERNO
             </Link>
-  
-            {/* Botón hamburguesa simplificado */}
+
             <button 
               className="hamburger-button"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -132,69 +180,96 @@ function Header() {
               {isMenuOpen ? '✕' : '☰'}
             </button>
           </div>
-  
+
           <div className="sections-container">
-            {/* Menú de escritorio */}
             <nav className="nav-menu">
-              {sections.map((section) => (
-                section.external ? (
+              {categorias.map((categoria) => (
+                categoria.external ? (
                   <a
-                    key={section.path}
-                    href={section.path}
+                    key={categoria.path}
+                    href={categoria.path}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {section.name}
+                    {categoria.nombre}
                   </a>
                 ) : (
-                  <Link
-                    key={section.path}
-                    to={`/seccion/${encodeURIComponent(section.path)}`}
-                  >
-                    {section.name}
-                  </Link>
+                  <div key={categoria.path} className="section-with-subcategorias">
+                    <Link
+                      to={`/seccion/${categoria.path}`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {categoria.nombre}
+                    </Link>
+                    {categoria.subcategorias.length > 0 && (
+                      <div className="subcategorias">
+                        {categoria.subcategorias.map((subcat) => (
+                          <Link
+                          key={subcat.path}
+                          to={`/subcategoria/${subcat.path}`}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                            {subcat.nombre}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 )
               ))}
             </nav>
-  
-            {/* Overlay para el menú móvil */}
+
             <div 
               className={`mobile-menu-overlay ${isMenuOpen ? 'open' : ''}`}
               onClick={() => setIsMenuOpen(false)}
             />
-  
-            {/* Menú móvil */}
+
             <nav className={`navv-menu ${isMenuOpen ? 'open' : ''}`}>
-              {sections.map((section) => (
-                section.external ? (
+              {categorias.map((categoria) => (
+                categoria.external ? (
                   <a
-                    key={section.path}
-                    href={section.path}
+                    key={categoria.path}
+                    href={categoria.path}
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setIsMenuOpen(false)}
                     className="mobile-section-link"
                   >
-                    {section.name}
+                    {categoria.nombre}
                   </a>
                 ) : (
-                  <Link
-                    key={section.path}
-                    to={`/seccion/${encodeURIComponent(section.path)}`}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="mobile-section-link"
-                  >
-                    {section.name}
-                  </Link>
+                  <div key={categoria.path} className="mobile-section-with-subcategorias">
+                    <Link
+                      to={`/seccion/${categoria.path}`}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="mobile-section-link"
+                    >
+                      {categoria.nombre}
+                    </Link>
+                    {categoria.subcategorias.length > 0 && (
+                      <div className="mobile-subcategorias">
+                        {categoria.subcategorias.map((subcat) => (
+                          <Link
+                          key={subcat.path}
+                          to={`/subcategoria/${subcat.path}`}
+                          onClick={() => setIsMenuOpen(false)}
+                          className="mobile-subcategoria-link"
+                        >
+                            {subcat.nombre}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 )
               ))}
-              
+
               <div className="mobile-auth-links">
                 {renderAuthLinks()}
               </div>
             </nav>
           </div>
-  
+
           <div className="header-actions">
             {renderAuthLinks()}
           </div>

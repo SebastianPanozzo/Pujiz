@@ -9,7 +9,7 @@ const HomePage = () => {
   const [featuredNews, setFeaturedNews] = useState([]);
   const [sectionNews, setSectionNews] = useState({});
   const [recentNews, setRecentNews] = useState([]);
-  const [mostViewedNews, setMostViewedNews] = useState([]); // New state
+  const [mostViewedNews, setMostViewedNews] = useState([]);
   const navigate = useNavigate();
 
   // Content processing functions
@@ -57,7 +57,7 @@ const HomePage = () => {
       try {
         const response = await axios.get('http://127.0.0.1:8000/diarioback/noticias');
         const filteredNews = response.data.filter(
-          newsItem => newsItem.estado === 3 && [newsItem.seccion1, newsItem.seccion2, newsItem.seccion3, newsItem.seccion4, newsItem.seccion5, newsItem.seccion6].includes('Portada')
+          newsItem => newsItem.estado === 3 && newsItem.categorias.includes('Portada')
         );
         const sortedNews = filteredNews.sort((a, b) => new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion));
         await fetchAuthorsAndEditors(sortedNews);
@@ -67,20 +67,32 @@ const HomePage = () => {
       }
     };
 
+
     const fetchSectionNews = async () => {
-      const sections = ['Economía', 'Política', 'Cultura y sociedad', 'Mundo'];
+      // Definir las secciones principales y sus subcategorías
+      const mainSections = {
+        'Politica': ['legislativos', 'judiciales', 'conurbano', 'provincias', 'municipios', 'protestas'],
+        'Cultura': ['cine', 'literatura', 'moda', 'tecnologia', 'eventos'],
+        'Economia': ['finanzas', 'negocios', 'empresas', 'dolar'],
+        'Mundo': ['argentina', 'china', 'estados_unidos', 'brasil', 'america', 'latinoamerica', 'asia', 'africa', 'oceania', 'antartica', 'internacional', 'seguridad', 'comercio', 'guerra']
+      };
+
       try {
         const response = await axios.get('http://127.0.0.1:8000/diarioback/noticias');
         const filteredNews = response.data.filter(newsItem => newsItem.estado === 3);
         await fetchAuthorsAndEditors(filteredNews);
 
         const newSectionNews = {};
-        sections.forEach(section => {
-          const sortedNews = filteredNews
-            .filter(newsItem => [newsItem.seccion1, newsItem.seccion2, newsItem.seccion3, newsItem.seccion4, newsItem.seccion5, newsItem.seccion6].includes(section))
-            .sort((a, b) => new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion));
+        
+        Object.entries(mainSections).forEach(([mainSection, subcategories]) => {
+          const sectionNews = filteredNews.filter(newsItem => {
+            const categories = newsItem.categorias;
+            return categories.some(category => 
+              subcategories.includes(category.toLowerCase())
+            );
+          }).sort((a, b) => new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion));
 
-          newSectionNews[section] = sortedNews.slice(0, 7);
+          newSectionNews[mainSection] = sectionNews.slice(0, 7);
         });
 
         setSectionNews(newSectionNews);
@@ -105,20 +117,13 @@ const HomePage = () => {
     const fetchMostViewedNews = async () => {
       try {
         const response = await axios.get('http://127.0.0.1:8000/diarioback/noticias/mas_vistas/');
-        // Filtrar solo noticias publicadas y ordenar por contador_visitas
         const filteredNews = response.data
           .filter(newsItem => newsItem.estado === 3)
           .sort((a, b) => b.contador_visitas - a.contador_visitas)
-          .slice(0, 5); // Tomar solo las 5 más vistas
+          .slice(0, 5);
         
         await fetchAuthorsAndEditors(filteredNews);
         setMostViewedNews(filteredNews);
-        
-        // Para debug
-        console.log('Noticias más vistas:', filteredNews.map(news => ({
-          titulo: news.nombre_noticia,
-          visitas: news.contador_visitas
-        })));
       } catch (error) {
         console.error('Failed to fetch most viewed news:', error);
       }
@@ -148,8 +153,7 @@ const HomePage = () => {
     fetchFeaturedNews();
     fetchSectionNews();
     fetchRecentNews();
-    fetchMostViewedNews(); // Add this new fetch
-
+    fetchMostViewedNews();
   }, []);
 
   const renderNewsSection = (newsArray, sectionTitle) => (

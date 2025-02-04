@@ -180,6 +180,7 @@ export const EditNewsContent = () => {
   };
 
   return (
+    <div style={{ marginTop: '120px' }}>
     <div>
       {headerImage && (
         <div style={{ marginBottom: 10 }}>
@@ -430,6 +431,7 @@ export const EditNewsContent = () => {
       <Button type="primary" onClick={handleSave} style={{ marginTop: 20 }}>
         Guardar
       </Button>
+    </div>
     </div>
   );
 };

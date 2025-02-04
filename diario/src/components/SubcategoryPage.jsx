@@ -1,55 +1,70 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
-import './SectionPage.css';
+import axios from 'axios';
+import './SubcategoryPage.css';
 
-const SectionPage = () => {
-  const { sectionName } = useParams();
+const SubcategoryPage = () => {
+  const { subcategory } = useParams();
   const [news, setNews] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const newsPerPage = 20;
 
-  // Definir las categorías principales y sus subcategorías
-  const mainSections = {
-    'portada': ['portada'],
-    'politica': ['legislativos', 'judiciales', 'conurbano', 'provincias', 'municipios', 'protestas'],
-    'cultura': ['cine', 'literatura', 'moda', 'tecnologia', 'eventos'],
-    'economia': ['finanzas', 'negocios', 'empresas', 'dolar'],
-    'mundo': ['argentina', 'china', 'estados_unidos', 'brasil', 'america', 'latinoamerica', 'asia', 'africa', 'oceania', 'antartica', 'internacional', 'seguridad', 'comercio', 'guerra']
+  // Map of subcategories to their parent categories for better navigation
+  const categoryMapping = {
+    'legislativos': 'Política',
+    'judiciales': 'Política',
+    'conurbano': 'Política',
+    'provincias': 'Política',
+    'municipios': 'Política',
+    'protestas': 'Política',
+    'cine': 'Cultura',
+    'literatura': 'Cultura',
+    'moda': 'Cultura',
+    'tecnologia': 'Cultura',
+    'eventos': 'Cultura',
+    'finanzas': 'Economía',
+    'negocios': 'Economía',
+    'empresas': 'Economía',
+    'dolar': 'Economía',
+    'argentina': 'Mundo',
+    'china': 'Mundo',
+    'estados_unidos': 'Mundo',
+    'brasil': 'Mundo',
+    'america': 'Mundo',
+    'latinoamerica': 'Mundo',
+    'asia': 'Mundo',
+    'africa': 'Mundo',
+    'oceania': 'Mundo',
+    'antartica': 'Mundo',
+    'internacional': 'Mundo',
+    'seguridad': 'Mundo',
+    'comercio': 'Mundo',
+    'guerra': 'Mundo'
   };
 
-  // Función para eliminar etiquetas HTML
   const stripHtml = (html) => {
     const doc = new DOMParser().parseFromString(html, 'text/html');
     return doc.body.textContent || '';
   };
 
   useEffect(() => {
-    const fetchSectionNews = async () => {
+    const fetchSubcategoryNews = async () => {
       setLoading(true);
       setError(null);
       try {
-        if (!sectionName) {
-          throw new Error('Sección no válida');
+        if (!subcategory) {
+          throw new Error('Subcategoría no válida');
         }
 
         const response = await axios.get('http://127.0.0.1:8000/diarioback/noticias/');
-        const normalizedSectionName = sectionName.toLowerCase().trim();
+        const normalizedSubcategory = subcategory.toLowerCase().trim();
         
-        // Obtener las subcategorías correspondientes a la sección principal
-        const subcategories = mainSections[normalizedSectionName] || [];
-
-        // Filtrar noticias que pertenezcan a cualquiera de las subcategorías
         const filteredNews = response.data
           .filter(newsItem => {
             if (newsItem.estado !== 3) return false;
-            
-            // Verificar si alguna de las categorías de la noticia está en las subcategorías
-            return newsItem.categorias.some(category => 
-              subcategories.includes(category.toLowerCase())
-            );
+            return newsItem.categorias.includes(normalizedSubcategory);
           })
           .sort((a, b) => new Date(b.fecha_publicacion) - new Date(a.fecha_publicacion));
 
@@ -58,7 +73,7 @@ const SectionPage = () => {
 
       } catch (error) {
         setError(error.message);
-        console.error('Failed to fetch section news:', error);
+        console.error('Failed to fetch subcategory news:', error);
       } finally {
         setLoading(false);
       }
@@ -77,12 +92,12 @@ const SectionPage = () => {
       }
     };
 
-    fetchSectionNews();
-  }, [sectionName]);
+    fetchSubcategoryNews();
+  }, [subcategory]);
 
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
-    window.scrollTo(0, 0); // Scroll to top when changing page
+    window.scrollTo(0, 0);
   };
 
   const truncateContent = (content, maxLength = 150) => {
@@ -92,20 +107,26 @@ const SectionPage = () => {
       plainText;
   };
 
-  if (loading) return <div className="loading">Cargando noticias...</div>;
-  if (error) return <div className="error">Error: {error}</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-screen">Cargando noticias...</div>;
+  if (error) return <div className="flex justify-center items-center min-h-screen text-red-600">Error: {error}</div>;
 
   const indexOfLastNews = currentPage * newsPerPage;
   const indexOfFirstNews = indexOfLastNews - newsPerPage;
   const currentNews = news.slice(indexOfFirstNews, indexOfLastNews);
   const totalPages = Math.ceil(news.length / newsPerPage);
 
+  const parentCategory = categoryMapping[subcategory.toLowerCase()];
+
   return (
-    <div className="section-page">
-      <h1>{sectionName.charAt(0).toUpperCase() + sectionName.slice(1)}</h1>
+    <div className="subcategory-page">
+      <div>
+        <h1 className="page-title">
+          {subcategory.charAt(0).toUpperCase() + subcategory.slice(1)}
+        </h1>
+      </div>
       
       {news.length === 0 ? (
-        <p className="no-news">No hay noticias disponibles en esta sección.</p>
+        <p className="no-news">No hay noticias disponibles en esta subcategoría.</p>
       ) : (
         <>
           <div className="news-grid">
@@ -114,7 +135,7 @@ const SectionPage = () => {
                 <div className="news-img-container">
                   <img 
                     src={newsItem.imagen_cabecera} 
-                    alt={newsItem.nombre_noticia} 
+                    alt={newsItem.nombre_noticia}
                     className="news-img"
                   />
                 </div>
@@ -130,17 +151,12 @@ const SectionPage = () => {
                         Por {newsItem.autorData.nombre} {newsItem.autorData.apellido}
                       </p>
                     )}
-                    <p className="news-category">
-                      {newsItem.categorias
-                        .filter(cat => mainSections[sectionName.toLowerCase()]?.includes(cat.toLowerCase()))
-                        .join(', ')}
-                    </p>
                   </div>
                 </div>
               </Link>
             ))}
           </div>
-
+  
           {totalPages > 1 && (
             <div className="pagination">
               {currentPage > 1 && (
@@ -178,4 +194,4 @@ const SectionPage = () => {
   );
 };
 
-export default SectionPage;
+export default SubcategoryPage;

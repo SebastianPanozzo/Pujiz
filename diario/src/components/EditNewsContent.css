@@ -1,10 +1,10 @@
 /* EditNewsContent.css */
 .edit-news-content-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f4f4f4;
-  }
+  max-width: 1200px;
+  margin: 120px auto 0; /* Agregamos 120px de margen superior */
+  padding: 20px;
+  background-color: #f4f4f4;
+}
   
   .header-image-preview {
     max-width: 200px;
