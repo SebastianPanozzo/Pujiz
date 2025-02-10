@@ -121,7 +121,13 @@ const SubcategoryPage = () => {
     <div className="subcategory-page">
       <div>
         <h1 className="page-title">
-          {subcategory.charAt(0).toUpperCase() + subcategory.slice(1)}
+          {subcategory
+            .replace(/_/g, ' ')
+            .replace(/-/g, ' ')
+            .split(' ')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ')
+          }
         </h1>
       </div>
       

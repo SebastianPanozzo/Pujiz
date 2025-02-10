@@ -57,7 +57,7 @@ function Header() {
       subcategorias: [
         { nombre: 'Argentina', path: 'argentina' },
         { nombre: 'China', path: 'china' },
-        { nombre: 'Estados Unidos', path: 'estados-unidos' },
+        { nombre: 'Estados Unidos', path: 'estados_unidos' },
         { nombre: 'Brasil', path: 'brasil' },
         { nombre: 'America', path: 'america' },
         { nombre: 'Latinoamerica', path: 'latinoamerica' },

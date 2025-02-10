@@ -237,13 +237,13 @@ const NewsDetail = () => {
         <div className="categories-container" style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
           {subcategories.map((category, index) => (
             <Link 
-              key={index} 
-              to={`/seccion/${encodeURIComponent(category.toLowerCase())}`} 
-              className="news-section-link"
-              style={{ color: '#0066cc', textDecoration: 'none' }}
-            >
-              <span className="news-section" style={{ fontSize: '14px' }}>{category}</span>
-            </Link>
+            key={index} 
+            to={category.toLowerCase() === 'portada' ? '/seccion/portada' : `/subcategoria/${encodeURIComponent(category.toLowerCase())}`}
+            className="news-section-link"
+            style={{ color: '#0066cc', textDecoration: 'none' }}
+          >
+            <span className="news-section" style={{ fontSize: '14px' }}>{category}</span>
+          </Link>
           ))}
         </div>
 
