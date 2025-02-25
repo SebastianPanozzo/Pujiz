@@ -119,6 +119,52 @@ function Header() {
     setTrabajadorId(null);
     navigate('/login');
   };
+  
+// Componente de iconos sociales con botones normales redondeados
+// Componente de iconos sociales con imágenes en botones redondeados
+const SocialIcons = () => (
+  <div className="social-icons-container">
+    <a
+      href="https://www.linkedin.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="social-button"
+      aria-label="LinkedIn"
+    >
+      <img 
+        src="/icons/linkedinheader.png" 
+        alt="" 
+        className="social-icon-img" 
+      />
+    </a>
+    <a
+      href="https://www.instagram.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="social-button"
+      aria-label="Instagram"
+    >
+      <img 
+        src="/icons/instagramheader.png" 
+        alt="" 
+        className="social-icon-img" 
+      />
+    </a>
+    <a
+      href="https://x.com"
+      target="_blank"
+      rel="noopener noreferrer"
+      className="social-buttonx"
+      aria-label="Twitter/X"
+    >
+      <img 
+        src="/icons/xheader.png" 
+        alt="" 
+        className="social-icon-img" 
+      />
+    </a>
+  </div>
+);
 
   const renderAuthLinks = () => (
     user ? (
@@ -264,6 +310,10 @@ function Header() {
                 )
               ))}
 
+              <div className="mobile-social-icons">
+                <SocialIcons />
+              </div>
+
               <div className="mobile-auth-links">
                 {renderAuthLinks()}
               </div>
@@ -271,7 +321,10 @@ function Header() {
           </div>
 
           <div className="header-actions">
-            {renderAuthLinks()}
+            <SocialIcons />
+            <div className="header-buttons">
+              {renderAuthLinks()}
+            </div>
           </div>
         </div>
       </header>

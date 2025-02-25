@@ -15,6 +15,7 @@ const NewsDetail = () => {
   const { user } = useUser();
   const [speechState, setSpeechState] = useState('stopped');
   const [speechProgress, setSpeechProgress] = useState(0);
+  const [topNews, setTopNews] = useState([]);
   const speechUtteranceRef = useRef(null);
   const speechInterval = useRef(null);
   const progressBarRef = useRef(null);
@@ -28,7 +29,17 @@ const NewsDetail = () => {
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || '';
   };
-
+// Función para envolver videos de YouTube en contenedores centrados
+const processContent = (htmlContent) => {
+  // Esto puede hacerse de manera más robusta con un parser de DOM,
+  // pero aquí usamos una solución simple con regex
+  const wrappedContent = htmlContent.replace(
+    /(<iframe[^>]*src=["']https?:\/\/(www\.)?youtube(-nocookie)?\.com\/embed\/[^"']+["'][^>]*><\/iframe>)/g,
+    '<div class="video-container">$1</div>'
+  );
+  
+  return wrappedContent;
+};
   const readContentAloud = () => {
     if (newsData && newsData.contenido) {
       const plainText = stripHtmlPalabras_clave(newsData.contenido);
@@ -115,22 +126,22 @@ const NewsDetail = () => {
 
   // Calculate speech progress with more precision
   const calculateSpeechProgress = (utterance) => {
-  if (!utterance || !audioTextRef.current) return 0;
+    if (!utterance || !audioTextRef.current) return 0;
 
-  const totalLength = totalTextLengthRef.current;
+    const totalLength = totalTextLengthRef.current;
 
-  if (!window.speechSynthesis.speaking) return 100;
+    if (!window.speechSynthesis.speaking) return 100;
 
-  const averageSpeechRate = 150; // Palabras por minuto
-  const averageWordLength = 5;   // Caracteres por palabra
+    const averageSpeechRate = 150; // Palabras por minuto
+    const averageWordLength = 5;   // Caracteres por palabra
 
-  const elapsedTime = performance.now() - speechStartTimeRef.current;
+    const elapsedTime = performance.now() - speechStartTimeRef.current;
 
-  const estimatedCharactersSpoken = (elapsedTime / 60000) * averageSpeechRate * averageWordLength;
-  const totalSpokenLength = Math.min(totalLength, estimatedCharactersSpoken);
+    const estimatedCharactersSpoken = (elapsedTime / 60000) * averageSpeechRate * averageWordLength;
+    const totalSpokenLength = Math.min(totalLength, estimatedCharactersSpoken);
 
-  return Math.min(100, Math.max(0, (totalSpokenLength / totalLength) * 100));
-};
+    return Math.min(100, Math.max(0, (totalSpokenLength / totalLength) * 100));
+  };
   
 
   // YouTube-like progress bar seek
@@ -200,7 +211,21 @@ const NewsDetail = () => {
       }
     };
 
+    const fetchTopNews = async () => {
+      try {
+        // Esta URL debe apuntar a tu endpoint que devuelve las noticias más leídas
+        const response = await axios.get('http://127.0.0.1:8000/diarioback/noticias/mas_vistas/');
+        // Filtramos para no mostrar la noticia actual entre las más leídas
+        const filteredNews = response.data.filter(news => news.id.toString() !== id);
+        // Tomamos solo las primeras 3
+        setTopNews(filteredNews.slice(0, 4));
+      } catch (error) {
+        console.error('Error fetching top news:', error);
+      }
+    };
+
     fetchNewsData();
+    fetchTopNews();
 
     return () => {
       window.speechSynthesis.cancel();
@@ -237,13 +262,13 @@ const NewsDetail = () => {
         <div className="categories-container" style={{ display: 'flex', gap: '15px', marginBottom: '20px' }}>
           {subcategories.map((category, index) => (
             <Link 
-            key={index} 
-            to={category.toLowerCase() === 'portada' ? '/seccion/portada' : `/subcategoria/${encodeURIComponent(category.toLowerCase())}`}
-            className="news-section-link"
-            style={{ color: '#0066cc', textDecoration: 'none' }}
-          >
-            <span className="news-section" style={{ fontSize: '14px' }}>{category}</span>
-          </Link>
+              key={index} 
+              to={category.toLowerCase() === 'portada' ? '/seccion/portada' : `/subcategoria/${encodeURIComponent(category.toLowerCase())}`}
+              className="news-section-link"
+              style={{ color: '#0066cc', textDecoration: 'none' }}
+            >
+              <span className="news-section" style={{ fontSize: '14px' }}>{category}</span>
+            </Link>
           ))}
         </div>
 
@@ -400,7 +425,7 @@ const NewsDetail = () => {
           margin: '0 auto',
           overflowWrap: 'break-word'
         }}
-        dangerouslySetInnerHTML={{ __html: contenido }}
+        dangerouslySetInnerHTML={{ __html: processContent(contenido) }}
       ></div>
 
       <div className="tags-section" style={{ marginBottom: '30px' }}>
@@ -415,16 +440,34 @@ const NewsDetail = () => {
       </div>
 
       <div className="reactions-section" style={{ 
-        
-        marginBottom: '30px',
-        clear: 'both',
-        width: '100%',
-        maxWidth: '800px',
-        margin: '0 auto'
-      }}>
-        <h3 className="tags-title">Reacciones</h3>
-        <NewsReactions noticiaId={id} />
-      </div>
+  marginBottom: '30px',
+  clear: 'both',
+  width: '100%',
+  maxWidth: '800px',
+  margin: '0 auto'
+}}>
+  <div style={{ 
+    display: 'flex', 
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between', // Distribuye los elementos
+    flexWrap: 'wrap', // Permite que los elementos se envuelvan en pantallas pequeñas
+    gap: '10px' // Espacio entre elementos
+  }}>
+    <h3 className="tags-title" style={{ 
+      margin: 0,
+      marginRight: 'auto' // Empuja el título a la izquierda
+    }}>Reacciones</h3>
+    
+    <div style={{
+      display: 'flex',
+      justifyContent: 'right', // Centra las reacciones
+      flexGrow: 1 // Permite que ocupe el espacio disponible
+    }}>
+      <NewsReactions noticiaId={id} />
+    </div>
+  </div>
+</div>
 
       <h3 className="comments-title">Comentarios</h3>
       <FacebookComments 
@@ -433,6 +476,88 @@ const NewsDetail = () => {
         canDeleteComments={user && user.es_trabajador}
         onDeleteComment={handleDeleteComment}
       />
+
+      {/* Sección de noticias más leídas */}
+      <div className="most-read-section" style={{ 
+        marginTop: '40px',
+        marginBottom: '40px',
+        clear: 'both',
+        width: '100%',
+        maxWidth: '800px',
+        margin: '40px auto'
+      }}>
+        <h3 className="most-read-title" style={{
+          fontFamily: "'Adelle Semibold Cnd'",
+          fontSize: '24px',
+          fontWeight: 'bold',
+          color: '#0066b2',
+          borderBottom: '2px solid #0066b2',
+          paddingBottom: '10px',
+          marginBottom: '20px'
+        }}>
+          Lo más leído
+        </h3>
+        
+        <div className="most-read-news-container" style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+          gap: '20px'
+        }}>
+          {topNews.map((news) => (
+            <Link 
+              key={news.id} 
+              to={`/noticia/${news.id}`} 
+              className="most-read-news-item"
+              style={{
+                textDecoration: 'none',
+                color: 'inherit',
+                display: 'block',
+                borderRadius: '5px',
+                overflow: 'hidden',
+                boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'translateY(-5px)';
+                e.currentTarget.style.boxShadow = '0 5px 15px rgba(0,0,0,0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 5px rgba(0,0,0,0.1)';
+              }}
+            >
+              <div className="most-read-news-image" style={{
+                width: '100%',
+                height: '150px',
+                backgroundImage: `url(${news.imagen_cabecera})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }} />
+              <div className="most-read-news-content" style={{ padding: '15px' }}>
+                <h4 style={{
+                  fontFamily: "'Adelle Semibold Cnd'",
+                  fontSize: '16px',
+                  fontWeight: 'bold',
+                  margin: '0 0 8px 0',
+                  color: '#000000'
+                }}>
+                  {news.nombre_noticia}
+                </h4>
+                <div className="most-read-news-date" style={{
+                  color: '#666',
+                  fontSize: '12px'
+                }}>
+                  {new Date(news.fecha_publicacion).toLocaleDateString('es-ES', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric'  
+                  })}
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };

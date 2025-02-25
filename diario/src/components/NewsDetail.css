@@ -212,7 +212,7 @@ pre {
 
 .tags-title {
   margin-top: 20px; /* Espacio por encima del título */
-  font-size: 20px; /* Tamaño de fuente del título */
+  font-size: 24px; /* Tamaño de fuente del título */
   font-weight: bold; /* Negrita */
 }
 
@@ -238,6 +238,22 @@ pre {
   margin-top: 40px;
   font-size: 24px;
   font-weight: bold;
+}
+.video-container {
+  position: relative;
+  padding-bottom: 56.25%; /* Proporción 16:9 */
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+  margin: 20px auto;
+}
+
+.video-container iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 @media screen and (max-width: 768px) {
   .news-detail-container {
