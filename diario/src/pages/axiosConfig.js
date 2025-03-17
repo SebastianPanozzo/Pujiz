@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'http://127.0.0.1:8000/diarioback/', // Cambiar según tu backend
+    baseURL: 'http://127.0.0.1:8000/diarioback/', // Mantener tu configuración de URL
     headers: {
         'Content-Type': 'application/json',
     },
@@ -25,14 +25,21 @@ instance.interceptors.response.use(
     async (error) => {
         const originalRequest = error.config;
 
-        if (error.response?.status === 401 && error.response.data?.code === 'token_not_valid' && !originalRequest._retry) {
+        // Mantiene tu lógica específica de verificación de error y código
+        if (error.response?.status === 401 && 
+            error.response.data?.code === 'token_not_valid' && 
+            !originalRequest._retry) {
+            
             originalRequest._retry = true;
 
             try {
                 const refreshToken = localStorage.getItem('refresh');
                 if (refreshToken) {
                     console.log("Intentando refrescar el token...");
-                    const response = await axios.post('http://127.0.0.1:8000/diarioback/token/refresh/', { refresh: refreshToken });
+                    const response = await axios.post(
+                        'http://127.0.0.1:8000/diarioback/token/refresh/', 
+                        { refresh: refreshToken }
+                    );
                     const newAccessToken = response.data.access;
                     console.log("Nuevo token de acceso recibido:", newAccessToken);
 
@@ -42,9 +49,13 @@ instance.interceptors.response.use(
                     return instance(originalRequest);
                 } else {
                     console.warn("No se encontró refresh token.");
+                    // Redirigir al login si no hay refresh token
+                    localStorage.clear();
+                    window.location.href = '/login';
                 }
             } catch (refreshError) {
                 console.error("Error al refrescar el token:", refreshError);
+                // Limpiar localStorage y redirigir al login en caso de error
                 localStorage.clear();
                 window.location.href = '/login';
             }
@@ -53,6 +64,5 @@ instance.interceptors.response.use(
         return Promise.reject(error);
     }
 );
-
 
 export default instance;

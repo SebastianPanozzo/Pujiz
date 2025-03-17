@@ -16,6 +16,7 @@ import SubcategoryPage from './components/SubcategoryPage'; // Nuevo import
 import TagPage from './components/TagPage';
 import CommentsPage from './pages/CommentsPage';
 import TrabajadorProfile from './components/TrabajadorProfile';
+import UserProfile from './components/UserProfile';
 import TrabajadorNoticias from './components/TrabajadorNoticias';
 import TerminosYCondiciones from './pages/TerminosYCondiciones';
 import ComoAnunciar from './pages/ComoAnunciar';
@@ -39,6 +40,7 @@ function App() {
           <Route path="/subcategoria/:subcategory" element={<SubcategoryPage />} /> {/* Nueva ruta */}
           <Route path="/tag/:tagName" element={<TagPage />} />
           <Route path="/comments/:id" element={<CommentsPage />} />
+          <Route path="/usuario/profile" element={<UserProfile />} />
           <Route path="/trabajador/:trabajadorId" element={<TrabajadorProfile />} />
           <Route path="/trabajador/:trabajadorId/noticias" element={<TrabajadorNoticias />} />
           <Route path="/terminos-y-condiciones" element={<TerminosYCondiciones />} />

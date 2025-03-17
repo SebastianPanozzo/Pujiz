@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from './axiosConfig';
-import { useNavigate, Link } from 'react-router-dom'; // Importar Link para navegar
+import { useNavigate, Link } from 'react-router-dom';
 import { useUser } from '../UserContext';
 import './login.css';
 
@@ -9,38 +9,73 @@ const Login = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        setError(null);
+        setLoading(true);
+        
+        console.log("Attempting login with:", { username, password });
+        
         try {
-            const response = await axios.post('login/', { username, password });
-            const { access, refresh, trabajador } = response.data;
-
-            // Guardar tokens en localStorage
-            localStorage.setItem('access', access);
-            localStorage.setItem('refresh', refresh);
-
-            // Almacenar información del usuario en el contexto y localStorage
-            const userData = { ...trabajador, access, refresh }; 
-            setUser(userData);
-            localStorage.setItem('user', JSON.stringify(userData)); 
-
-            // Verificar si es un trabajador y redirigir
-            if (trabajador) {
-                console.log("ID del trabajador:", trabajador.id);
-                navigate('/admin/dashboard');
-                window.location.reload();
-            } else {
+            // Paso 1: Obtener tokens
+            const response = await axios.post('login/', { 
+                username: username, 
+                password: password 
+            });
+            
+            console.log("Login response:", response.data);
+            
+            // Almacenar tokens en localStorage
+            localStorage.setItem('access', response.data.access);
+            localStorage.setItem('refresh', response.data.refresh);
+            
+            // Paso 2: Configurar axios con el nuevo token para la siguiente solicitud
+            axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.access}`;
+            
+            try {
+                // Paso 3: Obtener información del usuario
+                const userResponse = await axios.get('current-user/');
+                console.log("User data:", userResponse.data);
+                
+                // Paso 4: Actualizar el contexto del usuario
+                const userData = {
+                    ...userResponse.data,
+                    // Asegurarse de que trabajador sea un booleano explícito
+                    trabajador: userResponse.data.isWorker === true
+                };
+                
+                setUser(userData);
+                localStorage.setItem('user', JSON.stringify(userData));
+                
+                // Paso 5: Navegar a home sin recargar
                 navigate('/home');
-                window.location.reload();
+            } catch (userError) {
+                console.error("Error fetching user data:", userError);
+                setError('Error al obtener datos del usuario');
+                setLoading(false);
             }
         } catch (err) {
-            if (err.response && err.response.status === 401) {
-                setError('Credenciales inválidas');
+            console.error("Login error:", err);
+            if (err.response) {
+                console.error("Response status:", err.response.status);
+                console.error("Response data:", err.response.data);
+                
+                if (err.response.status === 401) {
+                    setError('Credenciales inválidas');
+                } else {
+                    setError(`Error: ${err.response.data.error || 'Problema con el servidor'}`);
+                }
+            } else if (err.request) {
+                console.error("Request error:", err.request);
+                setError('No se pudo conectar con el servidor');
             } else {
-                setError('Error en el servidor. Inténtalo de nuevo más tarde.');
+                console.error("Error message:", err.message);
+                setError(`Error: ${err.message}`);
             }
+            setLoading(false);
         }
     };
 
@@ -51,7 +86,7 @@ const Login = () => {
                 {error && <p className="error-message">{error}</p>}
                 <form onSubmit={handleLogin}>
                     <label>
-                        usuario:
+                        Usuario:
                         <input
                             type="text"
                             value={username}
@@ -60,7 +95,7 @@ const Login = () => {
                         />
                     </label>
                     <label>
-                        contraseña:
+                        Contraseña:
                         <input
                             type="password"
                             value={password}
@@ -68,9 +103,14 @@ const Login = () => {
                             required
                         />
                     </label>
-                    <button type="submit" className="login-button">Iniciar sesión</button>
+                    <button 
+                        type="submit" 
+                        className="login-button" 
+                        disabled={loading}
+                    >
+                        {loading ? 'Iniciando sesión...' : 'Iniciar sesión'}
+                    </button>
                 </form>
-                {/* Aquí agregamos el enlace para registrarse */}
                 <p className="signup-text">
                     ¿No tienes una cuenta? <Link to="/register">Regístrate aquí</Link>
                 </p>

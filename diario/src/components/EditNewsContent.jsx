@@ -28,26 +28,28 @@ export const EditNewsContent = () => {
     // Verificar si el usuario es un trabajador
     const verifyTrabajador = async () => {
       const accessToken = localStorage.getItem('access');
-
+      
       if (!accessToken) {
-        navigate('/login'); // Redirigir a login si no hay token
+        navigate('/login');
         return;
       }
-
+    
       try {
-        const response = await axios.get('http://127.0.0.1:8000/diarioback/user-profile/', {
+        // Use the same endpoint as in UserContext
+        const response = await axios.get('http://127.0.0.1:8000/diarioback/current-user/', {
           headers: {
             'Authorization': `Bearer ${accessToken}`,
           },
         });
-
-        if (!response.data.trabajador) {
-          navigate('/login'); // Redirigir si no es un trabajador
+    
+        // Check if user is a worker using the same condition as in UserContext
+        if (!response.data.isWorker) {
+          navigate('/login');
           return;
         }
       } catch (error) {
         console.error('Error verifying trabajador:', error);
-        navigate('/login'); // Redirigir en caso de error
+        navigate('/login');
       }
     };
 

@@ -105,16 +105,21 @@ const NewsManagement = () => {
       navigate('/home');
       return;
     }
-
+  
     axios.get('http://127.0.0.1:8000/diarioback/user-profile/', {
       headers: { 'Authorization': `Bearer ${accessToken}` },
     }).then(response => {
-      if (!response.data.trabajador) {
+      console.log("Perfil recibido:", response.data); // Para depurar
+      // Verifica si el usuario es un trabajador (ajusta esta condición según tu API)
+      if (response.data.id) {
+        setTrabajadorId(response.data.id);
+      } else {
         navigate('/home');
-        return;
       }
-      setTrabajadorId(response.data.id);
-    }).catch(() => navigate('/home'));
+    }).catch(error => {
+      console.error("Error al verificar el perfil:", error);
+      navigate('/home');
+    });
   };
 
   const showModal = (record = null) => {

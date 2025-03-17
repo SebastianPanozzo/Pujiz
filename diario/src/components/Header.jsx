@@ -3,10 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../UserContext';
 import './Header.css';
 import logo from '../assets/images/EG 1.jpg';
+import axios from '../pages/axiosConfig'; // Import your axios instance
 
 function Header() {
-  const { user, setUser } = useUser();
-  const [trabajadorId, setTrabajadorId] = useState(null);
+  const { user, setUser, logout } = useUser(); // Use the logout function from context
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const navigate = useNavigate();
@@ -101,11 +101,17 @@ function Header() {
       const response = await fetch('http://localhost:8000/diarioback/user-profile/', {
         headers: { Authorization: `Bearer ${accessToken}` },
       });
-
+  
       if (!response.ok) throw new Error('Error fetching user profile');
-
+  
       const data = await response.json();
-      setTrabajadorId(data.id || null);
+      // Update user context with profile data
+      // Asegúrate de que 'trabajador' se incluya en el objeto user
+      setUser(prevUser => ({ 
+        ...prevUser, 
+        ...data,
+        trabajador: data.trabajador || false // Asegurarse que exista la propiedad
+      }));
     } catch (error) {
       console.error(error);
       handleLogout();
@@ -113,58 +119,58 @@ function Header() {
   };
 
   const handleLogout = () => {
+    // Clear all auth data
     localStorage.removeItem('access');
     localStorage.removeItem('refresh');
+    localStorage.removeItem('user');
     setUser(null);
-    setTrabajadorId(null);
     navigate('/login');
   };
   
-// Componente de iconos sociales con botones normales redondeados
-// Componente de iconos sociales con imágenes en botones redondeados
-const SocialIcons = () => (
-  <div className="social-icons-container">
-    <a
-      href="https://www.linkedin.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="social-button"
-      aria-label="LinkedIn"
-    >
-      <img 
-        src="/icons/linkedinheader.png" 
-        alt="" 
-        className="social-icon-img" 
-      />
-    </a>
-    <a
-      href="https://www.instagram.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="social-button"
-      aria-label="Instagram"
-    >
-      <img 
-        src="/icons/instagramheader.png" 
-        alt="" 
-        className="social-icon-img" 
-      />
-    </a>
-    <a
-      href="https://x.com"
-      target="_blank"
-      rel="noopener noreferrer"
-      className="social-buttonx"
-      aria-label="Twitter/X"
-    >
-      <img 
-        src="/icons/xheader.png" 
-        alt="" 
-        className="social-icon-img" 
-      />
-    </a>
-  </div>
-);
+  // Componente de iconos sociales con imágenes en botones redondeados
+  const SocialIcons = () => (
+    <div className="social-icons-container">
+      <a
+        href="https://www.linkedin.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="social-button"
+        aria-label="LinkedIn"
+      >
+        <img 
+          src="/icons/linkedinheader.png" 
+          alt="" 
+          className="social-icon-img" 
+        />
+      </a>
+      <a
+        href="https://www.instagram.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="social-button"
+        aria-label="Instagram"
+      >
+        <img 
+          src="/icons/instagramheader.png" 
+          alt="" 
+          className="social-icon-img" 
+        />
+      </a>
+      <a
+        href="https://x.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="social-buttonx"
+        aria-label="Twitter/X"
+      >
+        <img 
+          src="/icons/xheader.png" 
+          alt="" 
+          className="social-icon-img" 
+        />
+      </a>
+    </div>
+  );
 
   const renderAuthLinks = () => (
     user ? (
@@ -178,15 +184,13 @@ const SocialIcons = () => (
         >
           Cerrar sesión
         </button>
-        {trabajadorId && (
-          <Link
-            to={`/trabajador/${trabajadorId}`}
-            className="button-common"
-            onClick={() => setIsMenuOpen(false)}
-          >
-            Perfil
-          </Link>
-        )}
+        <Link
+          to={user.trabajador ? "/trabajador/profile" : "/usuario/profile"}
+          className="button-common"
+          onClick={() => setIsMenuOpen(false)}
+        >
+          {user.trabajador ? "Perfil" : "Perfil de usuario"}
+        </Link>
       </>
     ) : (
       <>

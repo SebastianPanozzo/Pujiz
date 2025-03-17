@@ -4,19 +4,19 @@ import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-const TrabajadorProfile = () => {
+const UserProfile = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [trabajador, setTrabajador] = useState(null);
+  const [usuario, setUsuario] = useState(null);
   const [profileImage, setProfileImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchTrabajadorProfile();
+    fetchUserProfile();
   }, []);
 
-  const fetchTrabajadorProfile = async () => {
+  const fetchUserProfile = async () => {
     const accessToken = localStorage.getItem('access');
     if (!accessToken) return;
   
@@ -30,12 +30,12 @@ const TrabajadorProfile = () => {
       const { foto_perfil, descripcion_usuario, nombre, apellido } = response.data;
       const timestamp = new Date().getTime();
   
-      setTrabajador(response.data);
+      setUsuario(response.data);
       form.setFieldsValue({
         nombre: nombre || '',
         apellido: apellido || '',
         foto_perfil: foto_perfil || '',
-        descripcion_usuario: descripcion_usuario || '',  // Asignar la descripción en el formulario
+        descripcion_usuario: descripcion_usuario || '',
       });
   
       const imageUrl = foto_perfil
@@ -57,7 +57,6 @@ const TrabajadorProfile = () => {
     }
   };
   
-
   const handleUpdateProfile = async (values) => {
     const accessToken = localStorage.getItem('access');
     if (!accessToken) {
@@ -69,8 +68,7 @@ const TrabajadorProfile = () => {
     let formData = new FormData();
     formData.append('nombre', values.nombre);
     formData.append('apellido', values.apellido);
-    formData.append('descripcion_usuario', values.descripcion_usuario)  
-  // Enviar la descripción en el formulario
+    formData.append('descripcion_usuario', values.descripcion_usuario);
   
     if (profileImage) {
       formData.append('foto_perfil_local', profileImage);
@@ -85,7 +83,7 @@ const TrabajadorProfile = () => {
         },
       });
       message.success('Perfil actualizado correctamente');
-      await fetchTrabajadorProfile(); // Actualiza el perfil inmediatamente
+      await fetchUserProfile(); // Actualiza el perfil inmediatamente
     } catch (error) {
       console.error('Error updating profile:', error);
       if (error.response) {
@@ -112,23 +110,14 @@ const TrabajadorProfile = () => {
       }
     } else {
       setProfileImage(null);
-      setImagePreview(trabajador?.foto_perfil); // Cambiado a foto_perfil
+      setImagePreview(usuario?.foto_perfil);
     }
   };
 
-  // In your TrabajadorProfile.js
-const handleMisNoticias = () => {
-  const accessToken = localStorage.getItem('access');
-  console.log('Access token present:', !!accessToken);
-  console.log('Trabajador ID:', trabajador?.id);
-  console.log('Attempting to navigate to /ed');
-  navigate('/ed');
-};
-
   return (
     <div>
-      <h1>Perfil del Trabajador</h1>
-      {trabajador ? (
+      <h1>Perfil de Usuario</h1>
+      {usuario ? (
         <Form form={form} onFinish={handleUpdateProfile} encType="multipart/form-data">
           <Form.Item
             name="nombre"
@@ -157,12 +146,12 @@ const handleMisNoticias = () => {
             {imagePreview && (
               <img 
                 src={imagePreview} 
-                alt={`${trabajador.nombre} ${trabajador.apellido}`} 
+                alt={`${usuario.nombre} ${usuario.apellido}`} 
                 className="profile-image" 
               />
             )}
             <div className="author-details">
-              <span className="author-name">{trabajador.nombre} {trabajador.apellido}</span>
+              <span className="author-name">{usuario.nombre} {usuario.apellido}</span>
             </div>
           </div>
 
@@ -183,10 +172,6 @@ const handleMisNoticias = () => {
               Actualizar Perfil
             </Button>
           </Form.Item>
-
-          <Button type="default" onClick={handleMisNoticias}>
-            Mis Noticias
-          </Button>
         </Form>
       ) : (
         <p>Cargando perfil...</p>
@@ -195,6 +180,4 @@ const handleMisNoticias = () => {
   );
 };
 
-export default TrabajadorProfile;
-
-
+export default UserProfile;
