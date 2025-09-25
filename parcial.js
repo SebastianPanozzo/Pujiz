@@ -16,7 +16,6 @@ async function fetchWithRetry(url, opts = {}, retries = 2, delayMs = 500) {
     return json;
   } catch (err) {
     if (retries > 0) {
-      // muestra uso de timers/event-loop: no bloqueante
       await new Promise(res => setTimeout(res, delayMs));
       return fetchWithRetry(url, opts, retries - 1, delayMs * 1.5);
     }
@@ -156,7 +155,6 @@ function mapCommentsToUsers(comments, users) {
 }
 
 function topCommenters(comments, users, topN = 5) {
-  // contar comentarios por email y también mapear a user si posible
   const map = {};
   for (const c of comments) {
     const key = (c.email || '').toLowerCase();
