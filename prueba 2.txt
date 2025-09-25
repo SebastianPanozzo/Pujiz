@@ -18,3 +18,7 @@ git remote remove origin
 git remote -v
 
 extension Github Pull Request
+
+cd Resolucion
+
+node main.js
