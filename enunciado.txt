@@ -1,0 +1,142 @@
+1
+Enunciado
+Una startup quiere desarrollar un sistema de análisis de contenido para una red social ficticia.
+
+La empresa necesita poder:
+
+Obtener información de usuarios y de sus publicaciones desde una API pública.
+
+Modelar estos datos en clases de JavaScript que representen de forma clara a los usuarios y a sus publicaciones.
+
+Implementar un gestor que permita consultar y analizar la información de manera flexible.
+
+Requerimientos
+1. Consumo de API
+Usar fetch para traer usuarios y publicaciones desde una API pública (por ejemplo https://jsonplaceholder.typicode.com).
+
+Los datos deben procesarse con async/await.
+
+Si la API devuelve error (status diferente de 200), manejarlo con try/catch.
+
+2. Modelado de Clases (diseño libre)
+El alumno debe definir qué clases crear, qué propiedades y qué métodos deben tener.
+
+Se espera, como mínimo, representar usuarios y publicaciones de forma clara.
+
+Se debe validar que los objetos tengan todos los campos necesarios (si falta alguno, lanzar un error).
+
+3. Gestión de datos (búsqueda en los objetos obtenidos en el fetch)
+Implementar un gestor que permita:
+
+Buscar un usuario por su email.
+
+Listar todas las publicaciones de un usuario dado.
+
+Crear un mapeo donde cada usuario tenga asociadas sus publicaciones.
+
+4. Análisis de datos
+Implementar un método que muestre los usuarios con más publicaciones (por ejemplo, el Top 3).
+
+Implementar un método que permita buscar publicaciones que contengan cierta palabra clave en el título o contenido.
+
+5. Entrega esperada
+Código modularizado en varios archivos.
+
+Uso de fetch, async/await, manejo de errores.
+
+Clases bien diseñadas y comentadas.
+
+Lógica implementada en el gestor de forma clara.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2
+
+Una consultora de software necesita analizar datos de una red social ficticia.
+Los datos provienen de la API pública JSONPlaceholder:
+
+Usuarios:
+https://jsonplaceholder.typicode.com/users
+
+Publicaciones:
+https://jsonplaceholder.typicode.com/posts
+
+Tu tarea será diseñar y programar un sistema en JavaScript que permita trabajar con esta información de forma eficiente y lógica.
+
+Problemática
+1. Usuarios
+Se necesita poder identificar y trabajar con los usuarios registrados en la plataforma.
+
+Se debe poder buscar usuarios según distintos criterios (por ejemplo, correo electrónico o ciudad).
+
+La empresa quiere detectar si hay usuarios duplicados en base a su email o nombre de usuario.
+
+También requieren un análisis que indique qué ciudad tiene más usuarios registrados.    
+2. Publicaciones
+Cada publicación pertenece a un usuario.
+
+Se debe poder listar todas las publicaciones de un usuario.
+
+La empresa quiere detectar qué usuarios publican más contenido y obtener un ranking con los primeros 5.
+
+También necesitan una función que encuentre todas las publicaciones que contengan una determinada palabra clave en el título o en el contenido.
+
+3. Juego de lógica con datos combinados
+La empresa quiere un análisis que permita cruzar información:
+
+Encontrar si existen usuarios que no tengan ninguna publicación.
+
+Detectar cuál es la proporción de publicaciones por usuario en relación al total de publicaciones (ejemplo: "El usuario X genera el 12% del total de publicaciones").
+
+Generar un informe con la ciudad cuyos usuarios, en promedio, publican más contenido.
+
+4. Condiciones adicionales
+El sistema debe ser robusto: manejar errores de red y validar los datos recibidos de la API.
+
+El código debe aplicar conceptos vistos en clase: asincronía, manejo de errores, prototipos, closures, coerción, timers/event loop y organización modular.
+5. Condiciones adicionales
+El sistema debe manejar asincronía (fetch, async/await) y errores de red.
+
+Se deben validar los datos recibidos: si falta información crítica en un usuario, comentario o álbum, debe considerarse inválido.
+
+El proyecto debe aplicar conceptos como prototipos, closures, coerción, timers/event loop y organización modular.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
