@@ -1,0 +1,20 @@
+/*
+[user]
+    name = Sebas Pan
+    email = @gmail.com
+*/
+git clone https://github.com/SebastianPanozzo/Pujiz.git
+
+cd Pujiz
+
+git add .
+git commit -m "trabajo hecho en la facu"
+git push
+
+git config --global --unset credential.helper
+
+git remote remove origin
+
+git remote -v
+
+extension Github Pull Request
