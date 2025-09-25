@@ -1,7 +1,7 @@
 /*
 [user]
     name = Sebas Pan
-    email = @gmail.com
+    email = 9@gmail.com
 */
 git clone https://github.com/SebastianPanozzo/Pujiz.git
 
