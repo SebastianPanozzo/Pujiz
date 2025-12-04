@@ -1,4 +1,4 @@
-archivoss Pujiz
+archivos
 
 cd Pujiz
 
